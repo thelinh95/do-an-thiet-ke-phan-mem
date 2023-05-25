@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Partners</title>
+</head>
+<body>
+<h1>Partners</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="campaign : ${campaigns}">
+        <td th:text="${campaign.id}"></td>
+        <td th:text="${campaign.name}"></td>
+        <td th:text="${campaign.description}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
