@@ -4,7 +4,6 @@ import com.baouyen.doan.converter.PartnerConverter;
 import com.baouyen.doan.dto.Paginator;
 import com.baouyen.doan.dto.PartnerDto;
 import com.baouyen.doan.dto.SearchPartnerRequest;
-import com.baouyen.doan.entity.Campaign;
 import com.baouyen.doan.entity.Partner;
 import com.baouyen.doan.repository.PartnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;

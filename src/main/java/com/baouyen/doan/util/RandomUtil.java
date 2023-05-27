@@ -12,7 +12,7 @@ public class RandomUtil {
     }
 
     public static char generateRandomCharacter() {
-        int i = new Random().nextInt(10);
+        int i = new Random().nextInt(26);
         char c = (char) ('a' + i);
         return c;
     }

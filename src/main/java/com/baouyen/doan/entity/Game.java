@@ -1,5 +1,7 @@
 package com.baouyen.doan.entity;
 
+import com.baouyen.doan.dto.GameType;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,7 +11,12 @@ public class Game {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column
     private String name;
+
+    @Column
+    @Enumerated
+    private GameType gameType;
 
     public Long getId() {
         return id;
@@ -25,5 +32,13 @@ public class Game {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public GameType getGameType() {
+        return gameType;
+    }
+
+    public void setGameType(GameType gameType) {
+        this.gameType = gameType;
     }
 }

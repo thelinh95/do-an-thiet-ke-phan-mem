@@ -1,6 +1,8 @@
 package com.baouyen.doan;
 
+import com.baouyen.doan.dto.GameType;
 import com.baouyen.doan.entity.Campaign;
+import com.baouyen.doan.entity.Game;
 import com.baouyen.doan.entity.Partner;
 import com.baouyen.doan.entity.Voucher;
 import com.baouyen.doan.repository.CampaignRepository;
@@ -12,9 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
 
 import static com.baouyen.doan.dto.VoucherDto.VOUCHER_TYPE.TEN_PERCENT_DIS_COUNT;
 import static com.baouyen.doan.util.RandomUtil.generateRandomCharacter;
@@ -60,6 +60,7 @@ public class DoanApplication {
 
 		// init voucher
 		createVoucher(result);
+		createGame(result);
 
 		campaignRepository.save(result);
 	}
@@ -73,7 +74,22 @@ public class DoanApplication {
 		voucher.setType(TEN_PERCENT_DIS_COUNT);
 
 		voucher.setGameRandomNumber(String.valueOf(RandomUtil.generateRandomNumber(6)));
-		result.setVouchers(Arrays.asList(voucher));
+		result.setVouchers(new HashSet<>(Collections.singletonList(voucher)));
+	}
+
+	private static void createGame(Campaign result) {
+		char c = generateRandomCharacter();
+		Set<Game> games = new HashSet<>();
+
+		for(int i=0; i<5; i++) {
+			Game game = new Game();
+			int gameTypeInt = new Random().nextInt(2);
+			game.setName("game" + c);
+			game.setGameType(GameType.values()[gameTypeInt]);
+			games.add(game);
+		}
+
+		result.setGames(games);
 	}
 
 	private Partner createPartner() {

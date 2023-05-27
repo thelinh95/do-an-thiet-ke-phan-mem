@@ -26,9 +26,6 @@ public class CampaignController {
 
     @PostMapping()
     public Page<CampaignResponse> searchCampaign(@RequestBody SearchCampaignRequest request) {
-        String name = request.getName();
-        Paginator paginator = request.getPaginator();
-
         return campaignService.searchCampaign(request);
     }
 

@@ -1,6 +1,6 @@
 package com.baouyen.doan.dto;
 
-import java.util.List;
+import java.util.Set;
 
 public class CampaignResponse {
     private Long id;
@@ -12,7 +12,9 @@ public class CampaignResponse {
 
     private PartnerDto partner;
 
-    private List<VoucherDto> vouchers;
+    private Set<VoucherDto> vouchers;
+
+    private Set<GameDto> games;
 
     public Long getId() {
         return id;
@@ -38,13 +40,6 @@ public class CampaignResponse {
         this.partner = partner;
     }
 
-    public List<VoucherDto> getVouchers() {
-        return vouchers;
-    }
-
-    public void setVouchers(List<VoucherDto> vouchers) {
-        this.vouchers = vouchers;
-    }
 
     public String getEndDate() {
         return endDate;
@@ -60,5 +55,21 @@ public class CampaignResponse {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
+    }
+
+    public Set<VoucherDto> getVouchers() {
+        return vouchers;
+    }
+
+    public void setVouchers(Set<VoucherDto> vouchers) {
+        this.vouchers = vouchers;
+    }
+
+    public Set<GameDto> getGames() {
+        return games;
+    }
+
+    public void setGames(Set<GameDto> games) {
+        this.games = games;
     }
 }

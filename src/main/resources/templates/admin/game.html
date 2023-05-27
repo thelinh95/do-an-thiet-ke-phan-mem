@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Partners</title>
+    <title>Games</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"/>
@@ -24,20 +24,20 @@
                 size: size
             };
 
-            var searchPartnerDTO = {
+            var searchGameDTO = {
                 name: nameFilter,
                 paginator: paginator
             };
 
-            searchPartner(searchPartnerDTO);
+            searchGame(searchGameDTO);
         });
 
-        function searchPartner(searchPartnerDTO) {
+        function searchGame(searchGameDTO) {
             $.ajax({
-                url: '/admin/partners',
+                url: '/admin/games',
                 type: 'POST',
                 contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(searchPartnerDTO),
+                data: JSON.stringify(searchGameDTO),
                 success: function(response) {
                     renderSearchResults(response.content);
                     renderPagination(response.number, response.totalPages);
@@ -57,7 +57,7 @@
             for (var i = 0; i < totalPages; i++) {
                 var page = i;
                 var li = $('<li></li>');
-                var a = $('<a></a>').attr('href', '/partners?page=' + page).text(page);
+                var a = $('<a></a>').attr('href', '/games?page=' + page).text(page);
                 li.append(a);
 
                 if (currentPage === i) {
@@ -75,12 +75,12 @@
                         size: PAGE_SIZE
                     };
 
-                    var searchPartnerDTO = {
+                    var searchGameDTO = {
                         name: nameFilter,
                         paginator: paginator
                     };
 
-                    searchPartner(searchPartnerDTO);
+                    searchGame(searchGameDTO);
 
                 });
 
@@ -90,19 +90,16 @@
             pagination.append(ul);
         }
 
-        function renderSearchResults(partners) {
+        function renderSearchResults(games) {
             var tableBody = $('#searchResult');
             tableBody.empty();
 
-            for (var i = 0; i < partners.length; i++) {
-                var partner = partners[i];
+            for (var i = 0; i < games.length; i++) {
+                var game = games[i];
                 var row = '<tr>' +
-                            '<td>' + partner.id + '</td>' +
-                            '<td>' + partner.name + '</td>' +
-                            '<td>' + partner.streetAddress + '</td>' +
-                            '<td>' + partner.wardAddress + '</td>' +
-                            '<td>' + partner.districtAddress + '</td>' +
-                            '<td>' + partner.provinceAddress + '</td>' +
+                            '<td>' + game.id + '</td>' +
+                            '<td>' + game.name + '</td>' +
+                            '<td>' + game.gameType + '</td>' +
                           '</tr>';
                 tableBody.append(row);
             }
@@ -114,11 +111,11 @@
                 size: PAGE_SIZE
             };
 
-            var searchPartnerDTO = {
+            var searchGameDTO = {
                 paginator: paginator
             };
 
-        searchPartner(searchPartnerDTO);
+        searchGame(searchGameDTO);
 
     });
 /*]]>*/
@@ -129,7 +126,7 @@
 <body>
 <div class="container">
     <div id = "header">
-        <h2>Partner</h2>
+        <h2>Game</h2>
         <input type="text" id="nameFilter" placeholder="Enter name"/>
         <button id="searchBtn">Search</button>
     </div>
@@ -140,10 +137,7 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                <th>Street Address</th>
-                <th>Ward Address</th>
-                <th>District Address</th>
-                <th>Province Address</th>
+                <th>Game Type</th>
             </tr>
             </thead>
             <tbody id="searchResult">

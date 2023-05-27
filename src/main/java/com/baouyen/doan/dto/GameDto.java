@@ -4,6 +4,8 @@ public class GameDto {
     private Long id;
     private String name;
 
+    private GameType gameType;
+
     public String getName() {
         return name;
     }
@@ -18,5 +20,13 @@ public class GameDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public GameType getGameType() {
+        return gameType;
+    }
+
+    public void setGameType(GameType gameType) {
+        this.gameType = gameType;
     }
 }

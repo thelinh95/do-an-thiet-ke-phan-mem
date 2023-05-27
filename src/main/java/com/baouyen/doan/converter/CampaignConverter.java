@@ -16,13 +16,19 @@ public class CampaignConverter {
     @Autowired
     private VoucherConverter voucherConverter;
 
+    @Autowired
+    private GameConverter gameConverter;
+
     public Campaign dtoToEntity(CampaignResponse campaignResponse) {
         Campaign result = new Campaign();
         result.setId(campaignResponse.getId());
         result.setName(campaignResponse.getName());
         result.setPartner(partnerConverter.dtoToEntity(campaignResponse.getPartner()));
         result.setVouchers(campaignResponse.getVouchers().stream()
-                .map(v -> voucherConverter.dtoToEntity(v)).collect(Collectors.toList()));
+                .map(v -> voucherConverter.dtoToEntity(v)).collect(Collectors.toSet()));
+
+        result.setGames(campaignResponse.getGames().stream()
+                .map(v -> gameConverter.dtoToEntity(v)).collect(Collectors.toSet()));
         return result;
     }
 
@@ -35,7 +41,10 @@ public class CampaignConverter {
         result.setEndDate(DateTimeUtil.localDateToString(campaign.getEndDate(), "dd/MM/yyyy"));
         result.setPartner(partnerConverter.entityToDto(campaign.getPartner()));
         result.setVouchers(campaign.getVouchers().stream()
-                .map(v -> voucherConverter.entityToDto(v)).collect(Collectors.toList()));
+                .map(v -> voucherConverter.entityToDto(v)).collect(Collectors.toSet()));
+
+        result.setGames(campaign.getGames().stream()
+                .map(v -> gameConverter.entityToDto(v)).collect(Collectors.toSet()));
         return result;
     }
 }

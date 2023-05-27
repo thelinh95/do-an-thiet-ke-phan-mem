@@ -2,8 +2,7 @@ package com.baouyen.doan.entity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Campaign {
@@ -25,7 +24,10 @@ public class Campaign {
     private Partner partner;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Voucher> vouchers;
+    private Set<Voucher> vouchers;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Game> games;
 
     public Long getId() {
         return id;
@@ -51,14 +53,6 @@ public class Campaign {
         this.partner = partner;
     }
 
-    public List<Voucher> getVouchers() {
-        return vouchers;
-    }
-
-    public void setVouchers(List<Voucher> vouchers) {
-        this.vouchers = vouchers;
-    }
-
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -73,5 +67,21 @@ public class Campaign {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public Set<Voucher> getVouchers() {
+        return vouchers;
+    }
+
+    public void setVouchers(Set<Voucher> vouchers) {
+        this.vouchers = vouchers;
+    }
+
+    public Set<Game> getGames() {
+        return games;
+    }
+
+    public void setGames(Set<Game> games) {
+        this.games = games;
     }
 }

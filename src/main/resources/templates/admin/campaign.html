@@ -12,7 +12,7 @@
 
     /*<![CDATA[*/
     $(document).ready(function() {
-        var PAGE_SIZE = 2;
+        var PAGE_SIZE = 10;
 
         $('#searchBtn').click(function() {
             var nameFilter = $('#nameFilter').val();
@@ -103,6 +103,7 @@
                             '<td>' + campaign.endDate + '</td>' +
                             '<td>' + campaign.partner.name + '</td>' +
                             '<td>' + campaign.vouchers.length + '</td>' +
+                            '<td>' + campaign.games.length + '</td>' +
                           '</tr>';
                 tableBody.append(row);
             }
@@ -144,6 +145,7 @@
                 <th>End Date</th>
                 <th>Partner</th>
                 <th>Voucher</th>
+                <th>Game</th>
             </tr>
             </thead>
             <tbody id="searchResult">
