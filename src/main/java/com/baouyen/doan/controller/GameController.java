@@ -4,24 +4,36 @@ import com.baouyen.doan.dto.*;
 import com.baouyen.doan.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
+import javax.validation.Valid;
+
+@Controller
 @RequestMapping("/admin/games")
 public class GameController {
     @Autowired
     private GameService gameService;
 
-    @PostMapping()
-    public Page<GameDto> searchCampaign(@RequestBody SearchGameRequest request) {
+    @PostMapping("/search")
+    @ResponseBody
+    public Page<GameDto> searchGame(@RequestBody SearchGameRequest request) {
         String name = request.getName();
         Paginator paginator = request.getPaginator();
 
         return gameService.searchGame(request);
     }
 
+    @PostMapping()
+    @ResponseBody
+    public Boolean createGame(@RequestBody @Valid CreateGameRequest request) {
+        gameService.createGame(request);
+        return true;
+    }
+
+    @GetMapping("/create")
+    public String createGame() {
+        return "game/create-game";
+    }
 }
 

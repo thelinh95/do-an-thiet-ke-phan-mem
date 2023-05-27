@@ -1,9 +1,6 @@
 package com.baouyen.doan.entity;
 
 
-import com.baouyen.doan.dto.GameDto;
-import com.baouyen.doan.dto.UserDto;
-
 import javax.persistence.*;
 import java.util.Date;
 

@@ -1,9 +1,7 @@
 package com.baouyen.doan.service;
 
 import com.baouyen.doan.converter.GameConverter;
-import com.baouyen.doan.dto.Paginator;
-import com.baouyen.doan.dto.GameDto;
-import com.baouyen.doan.dto.SearchGameRequest;
+import com.baouyen.doan.dto.*;
 import com.baouyen.doan.entity.Game;
 import com.baouyen.doan.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +37,9 @@ public class GameServiceImp implements GameService {
     }
 
     @Override
-    public void createGame() {
-
+    public void createGame(CreateGameRequest request) {
+        Game game = gameConverter.requestDtoToEntity(request);
+        gameRepository.save(game);
     }
 
     @Override

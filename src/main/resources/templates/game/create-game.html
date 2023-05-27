@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Game</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}" />
+
+    <script th:inline="javascript">
+
+    /*<![CDATA[*/
+    $(document).ready(function() {
+        getMasterData();
+
+        $('#createBtn').click(function() {
+            var name = $('#name').val();
+            var gameType = $('#gameType').find(":selected").val();
+
+            var createGameDTO = {
+                name: name,
+                gameType: gameType
+            };
+
+            createGame(createGameDTO);
+        });
+
+        function getMasterData(){
+            $.get("/admin/master-data", function(data) {
+                var gameTypes = data.gameTypes;
+                var select = $("#gameType");
+                $.each(gameTypes, function(index, value) {
+                    select.append($("<option></option>").attr("value", value).text(value));
+                });
+            });
+        }
+
+        function createGame(createGameDTO) {
+            $.ajax({
+                url: '/admin/games',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(createGameDTO),
+                success: function(response) {
+                    alert("create game successfully");
+
+                    window.location.href = "/admin/game";
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
+    });
+/*]]>*/
+
+    </script>
+</head>
+<body>
+<div class="container">
+    <div id = "header">
+        <h2>Game</h2>
+        <button id="createBtn">Create</button>
+    </div>
+
+    <div id="create-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" required="true"/>
+        <br/>
+        <label for="gameType">Type:</label>
+        <select id="gameType" required="true">
+        </select>
+
+    </div>
+
+</div>
+</body>
+</html>
