@@ -1,6 +1,6 @@
 package com.baouyen.doan.dto;
 
-public class SearchCampaignRequest extends PaginationRequest {
+public class SearchPartnerRequest extends PaginationRequest {
     private String name;
 
     public String getName() {

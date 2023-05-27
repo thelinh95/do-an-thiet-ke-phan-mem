@@ -17,6 +17,20 @@ public class AdminController {
     public String campaign() {
         return "admin/campaign";
     }
+    @GetMapping("/partner")
+    public String partner() {
+        return "admin/partner";
+    }
+
+    @GetMapping("/game")
+    public String game() {
+        return "admin/game";
+    }
+
+    @GetMapping("/statistic")
+    public String statistic() {
+        return "admin/statistic";
+    }
 
 }
 

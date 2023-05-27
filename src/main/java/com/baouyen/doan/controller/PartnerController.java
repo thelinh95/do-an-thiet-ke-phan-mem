@@ -1,23 +1,27 @@
 package com.baouyen.doan.controller;
 
-import com.baouyen.doan.service.CampaignService;
+import com.baouyen.doan.dto.*;
+import com.baouyen.doan.service.PartnerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-//@Controller
-//@RequestMapping("/admin/partner")
+@RestController
+@RequestMapping("/admin/partners")
 public class PartnerController {
-
     @Autowired
-    private CampaignService campaignService;
+    private PartnerService partnerService;
 
-    /*
-    @GetMapping
-    public String searchPartner(Model model) {
-        List<CampaignDto> campaigns = campaignService.searchCampaign(request);
-        model.addAttribute("campaigns", campaigns);
-        return "admin/partner";
+    @PostMapping()
+    public Page<PartnerDto> searchCampaign(@RequestBody SearchPartnerRequest request) {
+        String name = request.getName();
+        Paginator paginator = request.getPaginator();
+
+        return partnerService.searchPartner(request);
     }
-     */
 
 }
 
