@@ -23,10 +23,18 @@ public class Campaign {
     @OneToOne
     private Partner partner;
 
+    @Column
+    @Enumerated
+    private CampaignStatus status;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Voucher> vouchers;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "have_game",
+            joinColumns = @JoinColumn(name = "campaign_id"),
+            inverseJoinColumns = @JoinColumn(name = "game_id"))
     private Set<Game> games;
 
     public Long getId() {
@@ -83,5 +91,13 @@ public class Campaign {
 
     public void setGames(Set<Game> games) {
         this.games = games;
+    }
+
+    public CampaignStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CampaignStatus status) {
+        this.status = status;
     }
 }

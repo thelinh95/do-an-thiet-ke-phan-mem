@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin/games")
@@ -22,6 +23,12 @@ public class GameController {
         Paginator paginator = request.getPaginator();
 
         return gameService.searchGame(request);
+    }
+
+    @GetMapping()
+    @ResponseBody
+    public List<GameDto> getAllGames() {
+        return gameService.getAllGames();
     }
 
     @PostMapping()

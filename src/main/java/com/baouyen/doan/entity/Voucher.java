@@ -14,6 +14,9 @@ public class Voucher {
     private Long id;
 
     @Column
+    private String code;
+
+    @Column
     private String description;
 
     @Column
@@ -21,8 +24,6 @@ public class Voucher {
 
     // game result will be announced on this day.
 
-    @Column
-    private int quantity;
 
     @Column
     private String gameRandomNumber;
@@ -56,14 +57,6 @@ public class Voucher {
         this.type = type;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public String getGameRandomNumber() {
         return gameRandomNumber;
     }
@@ -78,5 +71,13 @@ public class Voucher {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

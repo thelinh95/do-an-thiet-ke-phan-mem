@@ -1,10 +1,7 @@
 package com.baouyen.doan;
 
 import com.baouyen.doan.dto.GameType;
-import com.baouyen.doan.entity.Campaign;
-import com.baouyen.doan.entity.Game;
-import com.baouyen.doan.entity.Partner;
-import com.baouyen.doan.entity.Voucher;
+import com.baouyen.doan.entity.*;
 import com.baouyen.doan.repository.CampaignRepository;
 import com.baouyen.doan.repository.PartnerRepository;
 import com.baouyen.doan.util.RandomUtil;
@@ -62,7 +59,9 @@ public class DoanApplication {
 		createVoucher(result);
 		createGame(result);
 
-		campaignRepository.save(result);
+		result.setStatus(CampaignStatus.CREATED_VOUCHERS);
+
+		Campaign save = campaignRepository.save(result);
 	}
 
 	private static void createVoucher(Campaign result) {
@@ -70,7 +69,7 @@ public class DoanApplication {
 
 		Voucher voucher = new Voucher();
 		voucher.setDescription("voucher description" + c);
-		voucher.setQuantity(30);
+		voucher.setCode(UUID.randomUUID().toString());
 		voucher.setType(TEN_PERCENT_DIS_COUNT);
 
 		voucher.setGameRandomNumber(String.valueOf(RandomUtil.generateRandomNumber(6)));

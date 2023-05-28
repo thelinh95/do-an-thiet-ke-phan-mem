@@ -14,6 +14,10 @@
     $(document).ready(function() {
         var PAGE_SIZE = 10;
 
+        $('#createBtn').click(function() {
+            window.location.href = "/admin/campaigns/create";
+        });
+
         $('#searchBtn').click(function() {
             var nameFilter = $('#nameFilter').val();
             var page = 0;
@@ -34,7 +38,7 @@
 
         function searchCampaign(searchCampaignDTO) {
             $.ajax({
-                url: '/admin/campaigns',
+                url: '/admin/campaigns/search',
                 type: 'POST',
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(searchCampaignDTO),
@@ -133,6 +137,7 @@
         <h2>Campaign</h2>
         <input type="text" id="nameFilter" placeholder="Enter name"/>
         <button id="searchBtn">Search</button>
+        <button id="createBtn">Create</button>
     </div>
 
     <div id="table">

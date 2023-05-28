@@ -10,6 +10,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class GameServiceImp implements GameService {
     @Autowired
@@ -39,11 +42,20 @@ public class GameServiceImp implements GameService {
     @Override
     public void createGame(CreateGameRequest request) {
         Game game = gameConverter.requestDtoToEntity(request);
-        gameRepository.save(game);
+        Game crreatedGame = gameRepository.save(game);
     }
 
     @Override
     public void deleteGame() {
 
     }
+
+    @Override
+    public List<GameDto> getAllGames() {
+        return gameRepository.findAll()
+                .stream()
+                .map(c -> gameConverter.entityToDto(c))
+                .collect(Collectors.toList());
+    }
+
 }

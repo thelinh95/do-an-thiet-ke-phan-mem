@@ -11,7 +11,6 @@ public class VoucherConverter {
         result.setId(voucherDto.getId());
         result.setDescription(voucherDto.getDescription());
         result.setCreatedAt(voucherDto.getCreatedAt());
-        result.setQuantity(voucherDto.getQuantity());
         result.setType(voucherDto.getType());
         result.setGameRandomNumber(voucherDto.getGameRandomNumber());
 
@@ -23,7 +22,6 @@ public class VoucherConverter {
         result.setId(voucher.getId());
         result.setDescription(voucher.getDescription());
         result.setCreatedAt(voucher.getCreatedAt());
-        result.setQuantity(voucher.getQuantity());
         result.setType(voucher.getType());
         result.setGameRandomNumber(voucher.getGameRandomNumber());
 

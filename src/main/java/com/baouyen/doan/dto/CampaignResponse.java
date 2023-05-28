@@ -1,5 +1,7 @@
 package com.baouyen.doan.dto;
 
+import com.baouyen.doan.entity.CampaignStatus;
+
 import java.util.Set;
 
 public class CampaignResponse {
@@ -11,6 +13,8 @@ public class CampaignResponse {
     private String startDate;
 
     private PartnerDto partner;
+
+    private CampaignStatus status;
 
     private Set<VoucherDto> vouchers;
 
@@ -71,5 +75,13 @@ public class CampaignResponse {
 
     public void setGames(Set<GameDto> games) {
         this.games = games;
+    }
+
+    public CampaignStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CampaignStatus status) {
+        this.status = status;
     }
 }

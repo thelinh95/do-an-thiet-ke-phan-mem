@@ -6,10 +6,10 @@ import java.util.Date;
 
 public class VoucherDto {
     private Long id;
+
+    private String code;
     private String description;
     private VOUCHER_TYPE type;
-
-    private int quantity;
 
     private String gameRandomNumber;
 
@@ -46,14 +46,6 @@ public class VoucherDto {
         this.type = type;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public String getGameRandomNumber() {
         return gameRandomNumber;
     }
@@ -68,5 +60,13 @@ public class VoucherDto {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

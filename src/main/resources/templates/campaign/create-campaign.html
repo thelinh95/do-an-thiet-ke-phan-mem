@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Campaign</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" rel="stylesheet"/>
+
+    <link rel="stylesheet" th:href="@{/css/common.css}" type="text/css" />
+
+    <script th:inline="javascript">
+
+    /*<![CDATA[*/
+    $(document).ready(function() {
+        var today = new Date();
+        $('#startDate').datepicker({
+            dateFormat: "dd/mm/yy",
+            autoclose: true,
+            minDate: today
+        });
+
+         $('#endDate').datepicker({
+            dateFormat: "dd/mm/yy",
+            autoclose: true,
+            minDate: today
+        });
+
+        getAllGames();
+
+        $('#createBtn').click(function() {
+            var name = $('#name').val();
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+            var gameIds = $('#games').val();
+
+            var isValid = true;
+            if ($.trim(name) === '') {
+              $('#nameError').text('Please enter name');
+              $('#nameError').show();
+              isValid = false;
+            } else {
+              $('#nameError').hide();
+            }
+
+            if ($.trim(startDate) === '') {
+              $('#startDateError').text('Please enter start date');
+              $('#startDateError').show();
+              isValid = false;
+            } else {
+              $('#startDateError').hide();
+            }
+            
+            if ($.trim(endDate) === '') {
+              $('#endDateError').text('Please enter start date');
+              $('#endDateError').show();
+              isValid = false;
+            } else {
+              $('#endDateError').hide();
+            }
+
+            if($.trim(startDate) !== '' && $.trim(endDate) !== '') {
+              var startDateObject = new Date(startDate.split("/").reverse().join("-"));
+              var endDateObject = new Date(endDate.split("/").reverse().join("-"));
+
+              console.log(startDateObject);
+              console.log(endDateObject);
+              if(endDateObject < startDateObject) {
+                $('#endDateError').text('Start date must be before or equal End date');
+                $('#endDateError').show();
+                isValid = false;
+              } else {
+                $('#endDateError').hide();
+              }
+            }
+
+            if(gameIds.length == 0) {
+              $('#gamesError').text('Please select games');
+              $('#gamesError').show();
+              isValid = false;
+            } else {
+              $('#gamesError').hide();
+            }
+
+            if(!isValid) {
+                return;
+            }
+
+            var createCampaignDTO = {
+                name: name,
+                startDate: startDate,
+                endDate: endDate,
+                gameIds: gameIds
+            };
+
+            createCampaign(createCampaignDTO);
+        });
+
+        function getAllGames(){
+            $.get("/admin/games", function(data) {
+                var games = data;
+                var select = $("#games");
+                $.each(games, function(index, value) {
+                    select.append($("<option></option>").attr("value", value.id).text(value.name));
+                });
+            });
+        }
+
+        function createCampaign(createCampaignDTO) {
+
+            $.ajax({
+                url: '/admin/campaigns',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(createCampaignDTO),
+                success: function(response) {
+                    alert("create campaign successfully");
+
+                    window.location.href = "/admin/campaign";
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+
+    });
+/*]]>*/
+
+    </script>
+</head>
+<body>
+<div class="container">
+
+    <div id="create-form">
+        <div class="form-group">
+        <label for="name">Name:</label>
+        <input id="name" name="name" class="form-control"  type="text"/>
+        <div class="invalid-feedback" id="nameError"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="startDate">Select start date:</label>
+            <input type="text" class="form-control" id="startDate" />
+            <div class="invalid-feedback" id="startDateError"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="endDate">Select end date:</label>
+            <input type="text" class="form-control" id="endDate" />
+            <div class="invalid-feedback" id="endDateError"></div>
+        </div>
+
+        <div class="form-group" >
+            <label for="games"></label>
+            <select id="games" name="games" class="form-control" multiple="multiple">
+            </select>
+            <div class="invalid-feedback" id="gamesError"></div>
+        </div>
+
+        <button id="createBtn"  class="btn btn-default">Create</button>
+    </div>
+
+</div>
+</body>
+</html>

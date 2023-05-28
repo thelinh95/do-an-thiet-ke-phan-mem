@@ -3,6 +3,7 @@ package com.baouyen.doan.entity;
 import com.baouyen.doan.dto.GameType;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Game {
@@ -17,6 +18,9 @@ public class Game {
     @Column
     @Enumerated
     private GameType gameType;
+
+    @ManyToMany(mappedBy = "games")
+    private List<Campaign> campaign;
 
     public Long getId() {
         return id;
@@ -40,5 +44,13 @@ public class Game {
 
     public void setGameType(GameType gameType) {
         this.gameType = gameType;
+    }
+
+    public List<Campaign> getCampaign() {
+        return campaign;
+    }
+
+    public void setCampaign(List<Campaign> campaign) {
+        this.campaign = campaign;
     }
 }

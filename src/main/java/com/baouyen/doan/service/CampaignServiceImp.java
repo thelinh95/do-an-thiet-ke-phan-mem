@@ -2,9 +2,11 @@ package com.baouyen.doan.service;
 
 import com.baouyen.doan.converter.CampaignConverter;
 import com.baouyen.doan.dto.CampaignResponse;
+import com.baouyen.doan.dto.CreateCampaignRequest;
 import com.baouyen.doan.dto.Paginator;
 import com.baouyen.doan.dto.SearchCampaignRequest;
 import com.baouyen.doan.entity.Campaign;
+import com.baouyen.doan.entity.CampaignStatus;
 import com.baouyen.doan.repository.CampaignRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,8 +45,10 @@ public class CampaignServiceImp implements CampaignService {
     }
 
     @Override
-    public void createCampaign() {
-
+    public void createCampaign(CreateCampaignRequest request) {
+        Campaign campaign = campaignConverter.requestDtoToEntity(request);
+        campaign.setStatus(CampaignStatus.INITIAL);
+        Campaign crreatedCampaign = campaignRepository.save(campaign);
     }
 
     @Override

@@ -8,4 +8,9 @@ public class DateTimeUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         return localDate.format(formatter);
     }
+
+    public static LocalDate stringToDate(String date, String format){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return LocalDate.parse(date, formatter);
+    }
 }

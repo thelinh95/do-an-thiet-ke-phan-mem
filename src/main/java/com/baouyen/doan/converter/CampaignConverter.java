@@ -1,12 +1,21 @@
 package com.baouyen.doan.converter;
 
 import com.baouyen.doan.dto.CampaignResponse;
+import com.baouyen.doan.dto.CreateCampaignRequest;
 import com.baouyen.doan.entity.Campaign;
+import com.baouyen.doan.entity.Game;
+import com.baouyen.doan.entity.Partner;
+import com.baouyen.doan.repository.GameRepository;
+import com.baouyen.doan.repository.PartnerRepository;
 import com.baouyen.doan.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.baouyen.doan.util.RandomUtil.generateRandomCharacter;
 
 @Component
 public class CampaignConverter {
@@ -19,17 +28,42 @@ public class CampaignConverter {
     @Autowired
     private GameConverter gameConverter;
 
-    public Campaign dtoToEntity(CampaignResponse campaignResponse) {
-        Campaign result = new Campaign();
-        result.setId(campaignResponse.getId());
-        result.setName(campaignResponse.getName());
-        result.setPartner(partnerConverter.dtoToEntity(campaignResponse.getPartner()));
-        result.setVouchers(campaignResponse.getVouchers().stream()
-                .map(v -> voucherConverter.dtoToEntity(v)).collect(Collectors.toSet()));
+    @Autowired
+    private GameRepository gameRepository;
 
-        result.setGames(campaignResponse.getGames().stream()
-                .map(v -> gameConverter.dtoToEntity(v)).collect(Collectors.toSet()));
+    @Autowired
+    private PartnerRepository partnerRepository;
+
+    public Campaign requestDtoToEntity(CreateCampaignRequest request) {
+        Campaign result = new Campaign();
+        result.setName(request.getName());
+
+        result.setStartDate(DateTimeUtil.stringToDate(
+                request.getStartDate(), "dd/MM/yyyy"));
+
+        result.setEndDate(DateTimeUtil.stringToDate(
+                request.getEndDate(), "dd/MM/yyyy"));
+
+        List<Game> gamesByIds = gameRepository.findByIdIn(request.getGameIds());
+        //TODO get current partner.
+        Partner partner = createPartner();
+        result.setGames(new HashSet<>(gamesByIds));
+        result.setPartner(partner);
+
         return result;
+    }
+
+    private Partner createPartner() {
+        char c = generateRandomCharacter();
+
+        Partner partner = new Partner();
+        partner.setName("partner name" + c);
+        partner.setProvinceAddress("province" + c);
+        partner.setWardAddress("ward" + c);
+        partner.setDistrictAddress("district" + c);
+        partner.setStreetAddress("street" + c);
+        Partner createdPartner = partnerRepository.save(partner);
+        return createdPartner;
     }
 
 
@@ -40,11 +74,13 @@ public class CampaignConverter {
         result.setStartDate(DateTimeUtil.localDateToString(campaign.getStartDate(), "dd/MM/yyyy"));
         result.setEndDate(DateTimeUtil.localDateToString(campaign.getEndDate(), "dd/MM/yyyy"));
         result.setPartner(partnerConverter.entityToDto(campaign.getPartner()));
+
         result.setVouchers(campaign.getVouchers().stream()
                 .map(v -> voucherConverter.entityToDto(v)).collect(Collectors.toSet()));
 
         result.setGames(campaign.getGames().stream()
                 .map(v -> gameConverter.entityToDto(v)).collect(Collectors.toSet()));
+        result.setStatus(campaign.getStatus());
         return result;
     }
 }
