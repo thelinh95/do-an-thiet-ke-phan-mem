@@ -2,11 +2,13 @@ package com.baouyen.doan.entity;
 
 import com.baouyen.doan.dto.VoucherDto;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,11 +24,14 @@ public class Voucher {
     @Column
     private VoucherDto.VOUCHER_TYPE type;
 
-    // game result will be announced on this day.
-
-
     @Column
     private String gameRandomNumber;
+
+    @Column
+    private String gameRandomString;
+
+    @Column
+    private VoucherDto.VOUCHER_STATUS status;
 
     @Column
     @Temporal(TemporalType.DATE)
@@ -79,5 +84,21 @@ public class Voucher {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getGameRandomString() {
+        return gameRandomString;
+    }
+
+    public void setGameRandomString(String gameRandomString) {
+        this.gameRandomString = gameRandomString;
+    }
+
+    public VoucherDto.VOUCHER_STATUS getStatus() {
+        return status;
+    }
+
+    public void setStatus(VoucherDto.VOUCHER_STATUS status) {
+        this.status = status;
     }
 }

@@ -1,6 +1,7 @@
 package com.baouyen.doan;
 
 import com.baouyen.doan.dto.GameType;
+import com.baouyen.doan.dto.VoucherDto;
 import com.baouyen.doan.entity.*;
 import com.baouyen.doan.repository.CampaignRepository;
 import com.baouyen.doan.repository.PartnerRepository;
@@ -8,6 +9,7 @@ import com.baouyen.doan.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
@@ -17,6 +19,7 @@ import static com.baouyen.doan.dto.VoucherDto.VOUCHER_TYPE.TEN_PERCENT_DIS_COUNT
 import static com.baouyen.doan.util.RandomUtil.generateRandomCharacter;
 
 @SpringBootApplication
+@EnableJpaAuditing
 public class DoanApplication {
 	@Autowired
 	CampaignRepository campaignRepository;
@@ -37,6 +40,30 @@ public class DoanApplication {
 		createCampaign();
 		createCampaign();
 		createCampaign();
+		createCampaignNoVoucher();
+	}
+
+	private void createCampaignNoVoucher() {
+		char c = generateRandomCharacter();
+
+		Campaign result = new Campaign();
+		result.setName("name" + c);
+
+		int month = new Random().nextInt(4) + 7;
+		LocalDate startDate = LocalDate.of(2023, month, 28);
+		LocalDate endDate = LocalDate.of(2023, month, 30);
+
+		result.setStartDate(startDate);
+		result.setEndDate(endDate);
+
+		Partner createdPartner = createPartner();
+		result.setPartner(createdPartner);
+
+		createGame(result);
+
+		result.setStatus(CampaignStatus.INITIAL);
+
+		Campaign save = campaignRepository.save(result);
 	}
 
 	private void createCampaign() {
@@ -71,6 +98,7 @@ public class DoanApplication {
 		voucher.setDescription("voucher description" + c);
 		voucher.setCode(UUID.randomUUID().toString());
 		voucher.setType(TEN_PERCENT_DIS_COUNT);
+		voucher.setStatus(VoucherDto.VOUCHER_STATUS.INITIAL);
 
 		voucher.setGameRandomNumber(String.valueOf(RandomUtil.generateRandomNumber(6)));
 		result.setVouchers(new HashSet<>(Collections.singletonList(voucher)));

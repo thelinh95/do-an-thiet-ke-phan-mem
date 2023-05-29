@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @GetMapping("/home")
+    @GetMapping({"/home", ""})
     public String home() {
         return "admin/index";
     }

@@ -100,14 +100,20 @@
 
             for (var i = 0; i < campaigns.length; i++) {
                 var campaign = campaigns[i];
+
+                var voucherInfo = campaign.vouchers.length;
+                if (campaign.status !== 'CREATED_VOUCHERS') {
+                    voucherInfo = '<a href=\'/admin/campaigns/' + campaign.id + '/vouchers/create\'>' + 'Create' +'</a>';
+                }
+
                 var row = '<tr>' +
                             '<td>' + campaign.id + '</td>' +
                             '<td>' + campaign.name + '</td>' +
                             '<td>' + campaign.startDate + '</td>' +
                             '<td>' + campaign.endDate + '</td>' +
                             '<td>' + campaign.partner.name + '</td>' +
-                            '<td>' + campaign.vouchers.length + '</td>' +
                             '<td>' + campaign.games.length + '</td>' +
+                            '<td>' + voucherInfo + '</td>' +
                           '</tr>';
                 tableBody.append(row);
             }
@@ -149,8 +155,8 @@
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Partner</th>
-                <th>Voucher</th>
                 <th>Game</th>
+                <th>Voucher</th>
             </tr>
             </thead>
             <tbody id="searchResult">

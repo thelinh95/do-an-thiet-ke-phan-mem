@@ -18,8 +18,13 @@ public class VoucherDto {
 
     public enum VOUCHER_TYPE {
         TEN_PERCENT_DIS_COUNT,
-        TWEEN_TY_PERCENT_DIS_COUNT
+        TWENTY_PERCENT_DIS_COUNT
 
+    }
+
+    public enum VOUCHER_STATUS {
+        INITIAL,
+        USED
     }
 
     public String getDescription() {

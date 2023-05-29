@@ -16,4 +16,12 @@ public class RandomUtil {
         char c = (char) ('a' + i);
         return c;
     }
+
+    public static String generateRandomString(int length) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            sb.append(generateRandomCharacter());
+        }
+        return sb.toString();
+    }
 }
