@@ -3,6 +3,7 @@ package com.baouyen.doan.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,6 +34,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .antMatchers("/partner/**").hasAuthority("PARTNER")
                 .antMatchers("/user/**").hasAuthority("USER")
+                .antMatchers(HttpMethod.POST, "/admin/campaigns/search").permitAll()
+                .antMatchers(HttpMethod.POST, "/admin/games/search").permitAll()
+                .antMatchers(HttpMethod.POST, "/admin/partners/search").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin()
                 .loginPage("/login")
