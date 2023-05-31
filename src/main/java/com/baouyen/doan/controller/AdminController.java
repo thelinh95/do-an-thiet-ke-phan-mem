@@ -14,13 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    @GetMapping(value = {"", "/home"})
+    @GetMapping(value = {"", "/home", "/campaign"})
     public String home() {
-        return "admin/home";
-    }
-
-    @GetMapping("/campaign")
-    public String campaign() {
         return "admin/campaign";
     }
 
@@ -41,8 +36,8 @@ public class AdminController {
         return "admin/partner";
     }
 
-
-    @PostMapping("partners/search")
+    @PostMapping("/partners/search")
+    @ResponseBody
     public Page<PartnerDto> searchPartner(@RequestBody SearchPartnerRequest request) {
         return partnerService.searchPartner(request);
     }

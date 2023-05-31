@@ -18,7 +18,7 @@ import java.util.*;
 @Service
 public class CampaignServiceImp implements CampaignService {
 
-    public static final int GAME_RANDOM_DIGIT = 6;
+    public static final int GAME_RANDOM_DIGIT = 4;
     @Autowired
     private CampaignRepository campaignRepository;
 
@@ -43,7 +43,6 @@ public class CampaignServiceImp implements CampaignService {
         }
 
         return result.map(c -> campaignConverter.entityToResponseDto(c));
-
     }
 
     @Override

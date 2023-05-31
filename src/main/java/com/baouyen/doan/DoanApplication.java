@@ -18,6 +18,7 @@ import java.util.*;
 
 import static com.baouyen.doan.dto.VoucherDto.VOUCHER_TYPE.TEN_PERCENT_DIS_COUNT;
 import static com.baouyen.doan.util.RandomUtil.generateRandomCharacter;
+import static com.baouyen.doan.util.RandomUtil.generateRandomString;
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -32,7 +33,6 @@ public class DoanApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DoanApplication.class, args);
 
-
 	}
 
 	@PostConstruct
@@ -46,10 +46,8 @@ public class DoanApplication {
 	}
 
 	private void createCampaignNoVoucher() {
-		char c = generateRandomCharacter();
-
 		Campaign result = new Campaign();
-		result.setName("name" + c);
+		result.setName("name " + generateRandomString(2));
 
 		int month = new Random().nextInt(4) + 7;
 		LocalDate startDate = LocalDate.of(2023, month, 28);
@@ -69,10 +67,8 @@ public class DoanApplication {
 	}
 
 	private void createCampaign() {
-		char c = generateRandomCharacter();
-
 		Campaign result = new Campaign();
-		result.setName("name" + c);
+		result.setName("name " + generateRandomString(2));
 
 		int month = new Random().nextInt(4) + 5;
 		LocalDate startDate = LocalDate.of(2023, month, 22);
@@ -94,10 +90,8 @@ public class DoanApplication {
 	}
 
 	private static void createVoucher(Campaign result) {
-		char c = generateRandomCharacter();
-
 		Voucher voucher = new Voucher();
-		voucher.setDescription("voucher description" + c);
+		voucher.setDescription("voucher description " + generateRandomString(2));
 		voucher.setCode(UUID.randomUUID().toString());
 		voucher.setType(TEN_PERCENT_DIS_COUNT);
 		voucher.setStatus(VoucherDto.VOUCHER_STATUS.INITIAL);
@@ -107,13 +101,12 @@ public class DoanApplication {
 	}
 
 	private static void createGame(Campaign result) {
-		char c = generateRandomCharacter();
 		Set<Game> games = new HashSet<>();
 
 		for(int i=0; i<5; i++) {
 			Game game = new Game();
 			int gameTypeInt = new Random().nextInt(2);
-			game.setName("game" + c);
+			game.setName("game " + generateRandomString(2));
 			game.setGameType(GameType.values()[gameTypeInt]);
 			games.add(game);
 		}
@@ -122,14 +115,12 @@ public class DoanApplication {
 	}
 
 	private Partner createPartner() {
-		char c = generateRandomCharacter();
-
 		Partner partner = new Partner();
-		partner.setName("partner name" + c);
-		partner.setProvinceAddress("province" + c);
-		partner.setWardAddress("ward" + c);
-		partner.setDistrictAddress("district" + c);
-		partner.setStreetAddress("street" + c);
+		partner.setName("partner name " + generateRandomString(2));
+		partner.setProvinceAddress("province " + generateRandomString(2));
+		partner.setWardAddress("ward" + generateRandomString(2));
+		partner.setDistrictAddress("district " + generateRandomString(2));
+		partner.setStreetAddress("street " + generateRandomString(2));
 		Partner createdPartner = partnerRepository.save(partner);
 		return createdPartner;
 	}

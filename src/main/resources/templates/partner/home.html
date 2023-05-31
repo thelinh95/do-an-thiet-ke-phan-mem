@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
     <title>Partner</title>
 </head>
 <body>
+
+<form method="post" action="/logout">
+    <input type="submit" value="Logout"/>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+</form>
+<!-- end common -->
 
 <form method="post" action="/logout">
     <input type="submit" value="Logout"/>

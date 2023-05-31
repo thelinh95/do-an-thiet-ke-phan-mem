@@ -15,7 +15,6 @@ public class CampaignController {
     @Autowired
     private CampaignService campaignService;
 
-
     @PostMapping()
     @ResponseBody
     public Boolean createCampaign(@RequestBody CreateCampaignRequest request) {

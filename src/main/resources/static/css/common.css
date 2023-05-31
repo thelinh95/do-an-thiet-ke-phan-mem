@@ -22,11 +22,16 @@ color: #fff;
 }
 
 .container {
-margin-top: 50px;
+margin-top: 80px;
 }
 
 #header {
 position: relative;
-top: -50px;
+top: -40px;
+}
+
+#common-menu {
+position: relative;
+top: -80px;
 }
 

@@ -12,7 +12,7 @@
 
     /*<![CDATA[*/
     $(document).ready(function() {
-        var PAGE_SIZE = 10;
+        var PAGE_SIZE = 3;
 
         $('#createBtn').click(function() {
             window.location.href = "/admin/campaigns/create";
@@ -143,8 +143,38 @@
 </head>
 <body>
 <div class="container">
+    <!-- common menu -->
+    <div id="common-menu">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mx-auto" >
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/campaign}">Campaigns</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/partner}">Partners</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/game}">Games</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/statistic}">Statistic</a>
+                        </li>
+                        <li class="nav-item">
+                            <form th:action="@{/logout}" method="post">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-link nav-link">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- end common menu -->
     <div id = "header">
-        <h2>Campaign</h2>
+        <h3>Campaign</h3>
         <input type="text" id="nameFilter" placeholder="Enter name"/>
         <button id="searchBtn">Search</button>
         <button id="createBtn">Create</button>
@@ -161,8 +191,8 @@
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Partner</th>
-                <th>Game</th>
-                <th>Voucher</th>
+                <th>Number of Game</th>
+                <th>Number of Voucher</th>
             </tr>
             </thead>
             <tbody id="searchResult">
