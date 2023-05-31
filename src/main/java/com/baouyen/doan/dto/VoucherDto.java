@@ -17,9 +17,21 @@ public class VoucherDto {
     private Date createdAt;
 
     public enum VOUCHER_TYPE {
-        TEN_PERCENT_DIS_COUNT,
-        TWENTY_PERCENT_DIS_COUNT
+        TEN_PERCENT_DIS_COUNT ("ten percent discount"),
+        TWENTY_PERCENT_DIS_COUNT("twenty percent discount");
 
+        private String code;
+
+        VOUCHER_TYPE(String code) {
+            this.code = code;
+        }
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
     }
 
     public enum VOUCHER_STATUS {

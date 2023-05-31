@@ -13,10 +13,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping()
 public class MasterDataController {
+
+    public class MasterDataItem {
+        public String code;
+        public String text;
+        public MasterDataItem(String code, String text) {
+            this.code = code;
+            this.text = text;
+        }
+    }
 
     @Autowired
     private GameService gameService;
@@ -24,8 +34,13 @@ public class MasterDataController {
     @GetMapping("/master-data")
     @ResponseBody
     public MasterData getMasterData() {
-        List<GameType> gameTypes = Arrays.asList(GameType.values());
-        List<VoucherDto.VOUCHER_TYPE> voucherTypes = Arrays.asList(VoucherDto.VOUCHER_TYPE.values());
+        List<GameType> gameTypesEnum = Arrays.asList(GameType.values());
+        List<MasterDataItem> gameTypes = gameTypesEnum.stream().map(gt -> new MasterDataItem(gt.name(), gt.getCode()))
+                .collect(Collectors.toList());
+
+        List<VoucherDto.VOUCHER_TYPE> voucherTypesEnum = Arrays.asList(VoucherDto.VOUCHER_TYPE.values());
+        List<MasterDataItem> voucherTypes = voucherTypesEnum.stream().map(vt -> new MasterDataItem(vt.name(), vt.getCode()))
+                .collect(Collectors.toList());
 
         List<GameDto> allGames = gameService.getAllGames();
 
