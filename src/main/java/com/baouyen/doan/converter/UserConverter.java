@@ -9,7 +9,7 @@ public class UserConverter {
     public User dtoToEntity(UserDto userDto) {
         User result = new User();
         result.setId(userDto.getId());
-        result.setName(userDto.getName());
+        result.setUsername(userDto.getName());
 
         return result;
     }
@@ -18,7 +18,7 @@ public class UserConverter {
     public UserDto entityToDto(User user) {
         UserDto result = new UserDto();
         result.setId(user.getId());
-        result.setName(user.getName());
+        result.setName(user.getUsername());
 
         return result;
     }

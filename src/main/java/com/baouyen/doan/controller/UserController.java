@@ -1,22 +1,21 @@
 package com.baouyen.doan.controller;
 
-import com.baouyen.doan.service.PartnerService;
+import com.baouyen.doan.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("partner")
-public class PartnerController {
+@RequestMapping("user")
+public class UserController {
     @Autowired
-    private PartnerService partnerService;
+    private UserService userService;
 
     @GetMapping(value = {"", "/home"})
     public String home() {
-        return "partner/home";
+        return "user/home";
     }
-
 
 }
 

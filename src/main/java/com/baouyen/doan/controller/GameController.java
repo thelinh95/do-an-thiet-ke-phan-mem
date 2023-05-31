@@ -1,6 +1,8 @@
 package com.baouyen.doan.controller;
 
-import com.baouyen.doan.dto.*;
+import com.baouyen.doan.dto.CreateGameRequest;
+import com.baouyen.doan.dto.GameDto;
+import com.baouyen.doan.dto.SearchGameRequest;
 import com.baouyen.doan.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin/games")
@@ -19,16 +20,7 @@ public class GameController {
     @PostMapping("/search")
     @ResponseBody
     public Page<GameDto> searchGame(@RequestBody SearchGameRequest request) {
-        String name = request.getName();
-        Paginator paginator = request.getPaginator();
-
         return gameService.searchGame(request);
-    }
-
-    @GetMapping()
-    @ResponseBody
-    public List<GameDto> getAllGames() {
-        return gameService.getAllGames();
     }
 
     @PostMapping()

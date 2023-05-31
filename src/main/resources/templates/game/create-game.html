@@ -48,7 +48,7 @@
         });
 
         function getMasterData(){
-            $.get("/admin/master-data", function(data) {
+            $.get("/master-data", function(data) {
                 var gameTypes = data.gameTypes;
                 var select = $("#gameType");
                 $.each(gameTypes, function(index, value) {

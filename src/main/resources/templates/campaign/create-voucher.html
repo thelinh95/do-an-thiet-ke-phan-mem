@@ -50,7 +50,7 @@
             };
 
             var path = window.location.pathname;
-            var camapaignID = path.replace("admin/campaigns/", "");
+            var camapaignID = path.replace("campaigns/", "");
             camapaignID = camapaignID.replace("/vouchers/create","");
 
             createVoucher(createVoucherDTO, camapaignID);
@@ -77,14 +77,15 @@
         function createVoucher(createVoucherDTO, campaignId) {
 
             $.ajax({
-                url: '/admin/campaigns/' + campaignId + '/vouchers/create',
+                url: '/campaigns/' + campaignId + '/vouchers/create',
                 type: 'POST',
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(createVoucherDTO),
                 success: function(response) {
                     alert("create voucher successfully");
 
-                    window.location.href = "/admin/campaign";
+                    <!--                    TODO navigate to view all campaigns of current partner-->
+                    //window.location.href = "/campaign";
                 },
                 error: function(xhr) {
                     console.log(xhr.responseText);

@@ -27,7 +27,7 @@
             minDate: today
         });
 
-        getAllGames();
+        getMasterData();
 
         $('#createBtn').click(function() {
             var name = $('#name').val();
@@ -97,11 +97,11 @@
             createCampaign(createCampaignDTO);
         });
 
-        function getAllGames(){
-            $.get("/admin/games", function(data) {
-                var games = data;
+        function getMasterData(){
+            $.get("/master-data", function(data) {
+                var allGames = data.allGames;
                 var select = $("#games");
-                $.each(games, function(index, value) {
+                $.each(allGames, function(index, value) {
                     select.append($("<option></option>").attr("value", value.id).text(value.name));
                 });
             });
@@ -110,14 +110,15 @@
         function createCampaign(createCampaignDTO) {
 
             $.ajax({
-                url: '/admin/campaigns',
+                url: '/campaigns',
                 type: 'POST',
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(createCampaignDTO),
                 success: function(response) {
                     alert("create campaign successfully");
 
-                    window.location.href = "/admin/campaign";
+<!--                    TODO navigate to view all campaigns of current partner-->
+<!--                    window.location.href = "/admin/campaign";-->
                 },
                 error: function(xhr) {
                     console.log(xhr.responseText);

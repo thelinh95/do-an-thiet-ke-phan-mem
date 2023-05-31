@@ -1,32 +1,50 @@
 package com.baouyen.doan.controller;
 
-import com.baouyen.doan.dto.GameType;
-import com.baouyen.doan.dto.MasterData;
-import com.baouyen.doan.dto.VoucherDto;
+import com.baouyen.doan.dto.CampaignResponse;
+import com.baouyen.doan.dto.PartnerDto;
+import com.baouyen.doan.dto.SearchCampaignRequest;
+import com.baouyen.doan.dto.SearchPartnerRequest;
+import com.baouyen.doan.service.CampaignService;
+import com.baouyen.doan.service.PartnerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-
-    @GetMapping({"/home", ""})
+    @GetMapping(value = {"", "/home"})
     public String home() {
-        return "admin/index";
+        return "admin/home";
     }
 
     @GetMapping("/campaign")
     public String campaign() {
         return "admin/campaign";
     }
+
+    @Autowired
+    private CampaignService campaignService;
+
+    @Autowired
+    private PartnerService partnerService;
+
+    @PostMapping("/campaigns/search")
+    @ResponseBody
+    public Page<CampaignResponse> searchCampaign(@RequestBody SearchCampaignRequest request) {
+        return campaignService.searchCampaign(request);
+    }
+
     @GetMapping("/partner")
     public String partner() {
         return "admin/partner";
+    }
+
+
+    @PostMapping("partners/search")
+    public Page<PartnerDto> searchPartner(@RequestBody SearchPartnerRequest request) {
+        return partnerService.searchPartner(request);
     }
 
     @GetMapping("/game")
@@ -39,15 +57,5 @@ public class AdminController {
         return "admin/statistic";
     }
 
-    @GetMapping("/master-data")
-    @ResponseBody
-    public MasterData getMasterData() {
-        List<GameType> gameTypes = Arrays.asList(GameType.values());
-        List<VoucherDto.VOUCHER_TYPE> voucherTypes = Arrays.asList(VoucherDto.VOUCHER_TYPE.values());
-        MasterData result = new MasterData();
-        result.setGameTypes(gameTypes);
-        result.setVoucherTypes(voucherTypes);
-        return result;
-    }
 }
 
