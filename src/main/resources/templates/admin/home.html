@@ -5,6 +5,10 @@
 </head>
 <body>
 <h1>Welcome to the Admin Dashboard</h1>
+<form method="post" action="/logout">
+    <input type="submit" value="Logout"/>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+</form>
 <a th:href="@{/admin/campaign}" th:text="'Campaigns'"></a>
 <a th:href="@{/admin/partner}" th:text="'Partners'"></a>
 <a th:href="@{/admin/game}" th:text="'Games'"></a>

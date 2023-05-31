@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -27,7 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.authorizeRequests()
                 .antMatchers("/register", "/register/**").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
@@ -45,7 +45,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .csrf()
-                .ignoringAntMatchers("/register"); // ignore CSRF protection for POST requests to /register
+                .ignoringAntMatchers("/register") // ignore CSRF protection for POST requests to /register
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/accessDenied")
+                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
 
     }
 
