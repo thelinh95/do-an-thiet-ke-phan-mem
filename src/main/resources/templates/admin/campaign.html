@@ -14,10 +14,6 @@
     $(document).ready(function() {
         var PAGE_SIZE = 3;
 
-        $('#createBtn').click(function() {
-            window.location.href = "/admin/campaigns/create";
-        });
-
         $('#searchBtn').click(function() {
             var nameFilter = $('#nameFilter').val();
             var page = 0;
@@ -180,7 +176,6 @@
         <h3>Campaign</h3>
         <input type="text" id="nameFilter" placeholder="Enter name"/>
         <button id="searchBtn">Search</button>
-        <button id="createBtn">Create</button>
     </div>
 
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>

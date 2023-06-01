@@ -15,22 +15,10 @@ public class CampaignController {
     @Autowired
     private CampaignService campaignService;
 
-    @PostMapping()
-    @ResponseBody
-    public Boolean createCampaign(@RequestBody CreateCampaignRequest request) {
-        campaignService.createCampaign(request);
-        return true;
-    }
-
     @PostMapping("/{campaignId}/vouchers/create")
     @ResponseBody
     public Boolean createCampaignVoucher(@PathVariable Long campaignId, @RequestBody CreateCampaignVoucherRequest request) {
         return campaignService.createCampaignVoucher(campaignId, request);
-    }
-
-    @GetMapping("/create")
-    public String createCampaign() {
-        return "campaign/create-campaign";
     }
 
     @GetMapping("/{campaignId}/vouchers/create")

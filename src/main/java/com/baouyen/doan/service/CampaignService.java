@@ -8,7 +8,8 @@ import org.springframework.data.domain.Page;
 
 public interface CampaignService {
     Page<CampaignResponse> searchCampaign(SearchCampaignRequest request);
-    void createCampaign(CreateCampaignRequest request);
+    Page<CampaignResponse> searchPartnerCampaign(SearchCampaignRequest request);
+    void createPartnerCampaign(CreateCampaignRequest request);
     void deleteCampaign();
 
     boolean createCampaignVoucher(Long campaignId, CreateCampaignVoucherRequest request);

@@ -34,10 +34,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .antMatchers("/partner/**").hasAuthority("PARTNER")
                 .antMatchers("/user/**").hasAuthority("USER")
-                .antMatchers(HttpMethod.POST, "/admin/campaigns/search").permitAll()
-                .antMatchers(HttpMethod.POST, "/admin/games/search").permitAll()
-                .antMatchers(HttpMethod.POST, "/admin/partners/search").permitAll()
-                .antMatchers(HttpMethod.POST, "/admin/games").permitAll()
+
+                // TODO must login by role admin
+                .antMatchers(HttpMethod.POST, "/admin/campaigns/search").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/admin/games/search").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/admin/partners/search").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/admin/games").hasAuthority("ADMIN")
+
+                .antMatchers(HttpMethod.POST, "/partner/campaigns/search").hasAuthority("PARTNER")
+                .antMatchers(HttpMethod.POST, "/partner/campaigns").hasAuthority("PARTNER")
+
                 .anyRequest().authenticated()
                 .and().formLogin()
                 .loginPage("/login")

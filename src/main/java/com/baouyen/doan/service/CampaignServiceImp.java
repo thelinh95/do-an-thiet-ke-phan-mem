@@ -2,10 +2,9 @@ package com.baouyen.doan.service;
 
 import com.baouyen.doan.converter.CampaignConverter;
 import com.baouyen.doan.dto.*;
-import com.baouyen.doan.entity.Campaign;
-import com.baouyen.doan.entity.CampaignStatus;
-import com.baouyen.doan.entity.Voucher;
+import com.baouyen.doan.entity.*;
 import com.baouyen.doan.repository.CampaignRepository;
+import com.baouyen.doan.repository.PartnerRepository;
 import com.baouyen.doan.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +23,12 @@ public class CampaignServiceImp implements CampaignService {
 
     @Autowired
     private CampaignConverter campaignConverter;
+
+    @Autowired SecurityContextService securityContextService;
+
+    @Autowired
+    private PartnerRepository partnerRepository;
+
 
     @Override
     public Page<CampaignResponse> searchCampaign(SearchCampaignRequest request) {
@@ -46,8 +51,33 @@ public class CampaignServiceImp implements CampaignService {
     }
 
     @Override
-    public void createCampaign(CreateCampaignRequest request) {
+    public Page<CampaignResponse> searchPartnerCampaign(SearchCampaignRequest request) {
+        String name = request.getName();
+
+        Paginator paginator = request.getPaginator();
+        int page = paginator.getPage();
+        int size = paginator.getSize();
+
+        Pageable pageable = new PageRequest(page, size);
+
+        Partner partner = securityContextService.getCurrentPartner();
+
+        Page<Campaign> result;
+        if (name != null) {
+            // TODO check if we can use ContainingIgnoreCase
+            result = campaignRepository.findByNameContainingIgnoreCaseAndPartner(name, partner, pageable);
+        } else {
+            result = campaignRepository.findByPartner(partner, pageable);
+        }
+
+        return result.map(c -> campaignConverter.entityToResponseDto(c));
+    }
+
+    @Override
+    public void createPartnerCampaign(CreateCampaignRequest request) {
+        Partner currentPartner = securityContextService.getCurrentPartner();
         Campaign campaign = campaignConverter.requestDtoToEntity(request);
+        campaign.setPartner(currentPartner);
         campaign.setStatus(CampaignStatus.INITIAL);
         Campaign crreatedCampaign = campaignRepository.save(campaign);
     }

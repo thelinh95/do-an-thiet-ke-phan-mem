@@ -108,17 +108,18 @@
         }
 
         function createCampaign(createCampaignDTO) {
-
+            var csrfToken = $("input[name='_csrf']").val();
             $.ajax({
-                url: '/campaigns',
+                url: '/partner/campaigns',
                 type: 'POST',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRF-TOKEN", csrfToken);
+                },
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(createCampaignDTO),
                 success: function(response) {
                     alert("create campaign successfully");
-
-<!--                    TODO navigate to view all campaigns of current partner-->
-<!--                    window.location.href = "/admin/campaign";-->
+                    window.location.href = "/partner/campaign";
                 },
                 error: function(xhr) {
                     console.log(xhr.responseText);
@@ -134,8 +135,37 @@
 <body>
 <div class="container">
 
+    <!-- common menu -->
+    <div id="common-menu">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mx-auto" >
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/partner/campaign}">Campaigns</a>
+                        </li>
+                        <!--                        <li class="nav-item">-->
+                        <!--                            <a class="nav-link" th:href="@{/partner/store}">Store</a>-->
+                        <!--                        </li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/partner/profile}">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <form th:action="@{/logout}" method="post">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-link nav-link">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- end common menu -->
+
     <div id="create-form">
-        <div class="form-group">
+        <h3>Create Campaign</h3>
+        <div class="form-group"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <label for="name">Name:</label>
         <input id="name" name="name" class="form-control"  type="text"/>
         <div class="invalid-feedback" id="nameError"></div>

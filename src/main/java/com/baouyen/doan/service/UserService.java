@@ -51,13 +51,11 @@ public class UserService implements UserDetailsService {
 
     @PostConstruct
     public void createAdminUser() {
-//        if (!userRepository.existsByUsername("admin")) {
-            User admin = new User();
-            admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin"));
-            admin.setRole(Role.ADMIN);
-            userRepository.save(admin);
-//        }
+        User admin = new User();
+        admin.setUsername("admin");
+        admin.setPassword(passwordEncoder.encode("admin"));
+        admin.setRole(Role.ADMIN);
+        userRepository.save(admin);
     }
 
     public boolean authenticate(String username, String password) {

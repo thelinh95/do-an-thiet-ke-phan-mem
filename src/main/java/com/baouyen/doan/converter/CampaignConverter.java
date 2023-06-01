@@ -45,27 +45,10 @@ public class CampaignConverter {
                 request.getEndDate(), "dd/MM/yyyy"));
 
         List<Game> gamesByIds = gameRepository.findByIdIn(request.getGameIds());
-        //TODO get current partner.
-        Partner partner = createPartner();
         result.setGames(new HashSet<>(gamesByIds));
-        result.setPartner(partner);
 
         return result;
     }
-
-    private Partner createPartner() {
-        char c = generateRandomCharacter();
-
-        Partner partner = new Partner();
-        partner.setName("partner name" + c);
-        partner.setProvinceAddress("province" + c);
-        partner.setWardAddress("ward" + c);
-        partner.setDistrictAddress("district" + c);
-        partner.setStreetAddress("street" + c);
-        Partner createdPartner = partnerRepository.save(partner);
-        return createdPartner;
-    }
-
 
     public CampaignResponse entityToResponseDto(Campaign campaign) {
         CampaignResponse result = new CampaignResponse();
