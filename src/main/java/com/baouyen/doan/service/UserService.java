@@ -1,9 +1,13 @@
 package com.baouyen.doan.service;
 
-import com.baouyen.doan.dto.Role;
+import com.baouyen.doan.converter.UserConverter;
+import com.baouyen.doan.dto.*;
 import com.baouyen.doan.entity.User;
 import com.baouyen.doan.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +28,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserConverter userConverter;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -59,6 +66,25 @@ public class UserService implements UserDetailsService {
             return passwordEncoder.matches(password, userOpt.get().getPassword());
         }
         return false;
+    }
+
+    public Page<UserDto> searchUser(SearchUserRequest request) {
+        String name = request.getName();
+
+        Paginator paginator = request.getPaginator();
+        int page = paginator.getPage();
+        int size = paginator.getSize();
+
+        Pageable pageable = new PageRequest(page, size);
+
+        Page<User> result;
+        if (name != null) {
+            result = userRepository.findByUsernameContainingIgnoreCase(name, pageable);
+        } else {
+            result = userRepository.findAll(pageable);
+        }
+
+        return result.map(c -> userConverter.entityToDto(c));
     }
 }
 

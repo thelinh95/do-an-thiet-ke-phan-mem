@@ -1,11 +1,9 @@
 package com.baouyen.doan.controller;
 
-import com.baouyen.doan.dto.CampaignResponse;
-import com.baouyen.doan.dto.PartnerDto;
-import com.baouyen.doan.dto.SearchCampaignRequest;
-import com.baouyen.doan.dto.SearchPartnerRequest;
+import com.baouyen.doan.dto.*;
 import com.baouyen.doan.service.CampaignService;
 import com.baouyen.doan.service.PartnerService;
+import com.baouyen.doan.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -24,6 +22,9 @@ public class AdminController {
 
     @Autowired
     private PartnerService partnerService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/campaigns/search")
     @ResponseBody
@@ -50,6 +51,17 @@ public class AdminController {
     @GetMapping("/statistic")
     public String statistic() {
         return "admin/statistic";
+    }
+
+    @GetMapping("/user")
+    public String user() {
+        return "admin/user";
+    }
+
+    @PostMapping("/users/search")
+    @ResponseBody
+    public Page<UserDto> searchUser(@RequestBody SearchUserRequest request) {
+        return userService.searchUser(request);
     }
 
 }

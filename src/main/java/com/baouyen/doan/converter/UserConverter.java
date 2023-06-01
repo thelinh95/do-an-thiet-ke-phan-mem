@@ -10,7 +10,7 @@ public class UserConverter {
         User result = new User();
         result.setId(userDto.getId());
         result.setUsername(userDto.getName());
-
+        result.setRole(userDto.getRole());
         return result;
     }
 
@@ -19,7 +19,7 @@ public class UserConverter {
         UserDto result = new UserDto();
         result.setId(user.getId());
         result.setName(user.getUsername());
-
+        result.setRole(user.getRole());
         return result;
     }
 }
