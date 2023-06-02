@@ -20,7 +20,8 @@ public class Campaign {
     @Column
     private LocalDate endDate;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "campaign_id")
     private Partner partner;
 
     @Column

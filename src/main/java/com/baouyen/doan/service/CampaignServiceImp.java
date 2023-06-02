@@ -80,7 +80,8 @@ public class CampaignServiceImp implements CampaignService {
         Partner currentPartner = securityContextService.getCurrentPartner();
         Campaign campaign = campaignConverter.requestDtoToEntity(request);
         campaign.setPartner(currentPartner);
-        currentPartner.setCampaign(campaign);
+        Set<Campaign> campaigns = currentPartner.getCampaigns();
+        campaigns.add(campaign);
         campaign.setStatus(CampaignStatus.INITIAL);
         Campaign crreatedCampaign = campaignRepository.save(campaign);
     }

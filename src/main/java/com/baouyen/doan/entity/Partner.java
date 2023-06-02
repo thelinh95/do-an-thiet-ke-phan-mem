@@ -1,6 +1,7 @@
 package com.baouyen.doan.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Partner {
@@ -23,8 +24,8 @@ public class Partner {
     @Column
     private String provinceAddress;
 
-    @OneToOne
-    private Campaign campaign;
+    @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Campaign> campaigns;
 
     public Long getId() {
         return id;
@@ -74,11 +75,11 @@ public class Partner {
         this.provinceAddress = provinceAddress;
     }
 
-    public Campaign getCampaign() {
-        return campaign;
+    public Set<Campaign> getCampaigns() {
+        return campaigns;
     }
 
-    public void setCampaign(Campaign campaign) {
-        this.campaign = campaign;
+    public void setCampaigns(Set<Campaign> campaigns) {
+        this.campaigns = campaigns;
     }
 }
