@@ -27,7 +27,7 @@ public class Campaign {
     @Enumerated
     private CampaignStatus status;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Voucher> vouchers;
 
     @ManyToMany(cascade = CascadeType.ALL)

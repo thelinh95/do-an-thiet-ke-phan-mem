@@ -33,6 +33,10 @@ public class Voucher {
     @Column
     private VoucherDto.VOUCHER_STATUS status;
 
+    @ManyToOne
+    @JoinColumn(name = "campaign_id")
+    private Campaign campaign;
+
     @Column
     @Temporal(TemporalType.DATE)
     @CreatedDate
@@ -100,5 +104,13 @@ public class Voucher {
 
     public void setStatus(VoucherDto.VOUCHER_STATUS status) {
         this.status = status;
+    }
+
+    public Campaign getCampaign() {
+        return campaign;
+    }
+
+    public void setCampaign(Campaign campaign) {
+        this.campaign = campaign;
     }
 }

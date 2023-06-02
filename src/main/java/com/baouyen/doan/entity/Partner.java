@@ -23,6 +23,9 @@ public class Partner {
     @Column
     private String provinceAddress;
 
+    @OneToOne
+    private Campaign campaign;
+
     public Long getId() {
         return id;
     }
@@ -69,5 +72,13 @@ public class Partner {
 
     public void setProvinceAddress(String provinceAddress) {
         this.provinceAddress = provinceAddress;
+    }
+
+    public Campaign getCampaign() {
+        return campaign;
+    }
+
+    public void setCampaign(Campaign campaign) {
+        this.campaign = campaign;
     }
 }

@@ -9,12 +9,14 @@ public class VoucherDto {
 
     private String code;
     private String description;
-    private VOUCHER_TYPE type;
+    private String type;
 
     private String gameRandomNumber;
 
     @Temporal(TemporalType.DATE)
     private Date createdAt;
+
+    private VOUCHER_STATUS status;
 
     public enum VOUCHER_TYPE {
         TEN_PERCENT_DIS_COUNT ("ten percent discount"),
@@ -55,11 +57,11 @@ public class VoucherDto {
         this.id = id;
     }
 
-    public VOUCHER_TYPE getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(VOUCHER_TYPE type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -85,5 +87,13 @@ public class VoucherDto {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public VOUCHER_STATUS getStatus() {
+        return status;
+    }
+
+    public void setStatus(VOUCHER_STATUS status) {
+        this.status = status;
     }
 }

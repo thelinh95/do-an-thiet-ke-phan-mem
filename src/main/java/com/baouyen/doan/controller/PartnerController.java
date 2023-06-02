@@ -5,6 +5,7 @@ import com.baouyen.doan.entity.Partner;
 import com.baouyen.doan.service.CampaignService;
 import com.baouyen.doan.service.PartnerService;
 import com.baouyen.doan.service.SecurityContextService;
+import com.baouyen.doan.service.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,9 @@ public class PartnerController {
     private CampaignService campaignService;
 
     @Autowired
+    private VoucherService  voucherService;
+
+    @Autowired
     private SecurityContextService securityContextService;
 
     @GetMapping(value = {"", "/profile", "/home"})
@@ -35,6 +39,11 @@ public class PartnerController {
         return "partner/campaign";
     }
 
+    @GetMapping(value = {"/voucher"})
+    public String voucher() {
+        return "partner/voucher";
+    }
+
     @PostMapping("/campaigns/search")
     @ResponseBody
     public Page<CampaignResponse> searchCampaign(@RequestBody SearchCampaignRequest request) {
@@ -46,6 +55,12 @@ public class PartnerController {
     public Boolean createCampaign(@RequestBody CreateCampaignRequest request) {
         campaignService.createPartnerCampaign(request);
         return true;
+    }
+
+    @PostMapping("/vouchers/search")
+    @ResponseBody
+    public Page<VoucherDto> searchVoucher(@RequestBody SearchVoucherRequest request) {
+        return voucherService.searchPartnerVoucher(request);
     }
 
     @GetMapping("/campaign/create")

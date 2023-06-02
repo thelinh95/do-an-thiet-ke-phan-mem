@@ -6,23 +6,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class VoucherConverter {
-    public Voucher dtoToEntity(VoucherDto voucherDto) {
-        Voucher result = new Voucher();
-        result.setId(voucherDto.getId());
-        result.setDescription(voucherDto.getDescription());
-        result.setCreatedAt(voucherDto.getCreatedAt());
-        result.setType(voucherDto.getType());
-        result.setGameRandomNumber(voucherDto.getGameRandomNumber());
-
-        return result;
-    }
 
     public VoucherDto entityToDto(Voucher voucher) {
         VoucherDto result = new VoucherDto();
         result.setId(voucher.getId());
+        result.setCode(voucher.getCode());
         result.setDescription(voucher.getDescription());
         result.setCreatedAt(voucher.getCreatedAt());
-        result.setType(voucher.getType());
+        result.setType(voucher.getType().getCode());
+        result.setStatus(voucher.getStatus());
         result.setGameRandomNumber(voucher.getGameRandomNumber());
 
         return result;

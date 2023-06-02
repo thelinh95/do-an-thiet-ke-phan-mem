@@ -2,7 +2,10 @@ package com.baouyen.doan.service;
 
 import com.baouyen.doan.converter.CampaignConverter;
 import com.baouyen.doan.dto.*;
-import com.baouyen.doan.entity.*;
+import com.baouyen.doan.entity.Campaign;
+import com.baouyen.doan.entity.CampaignStatus;
+import com.baouyen.doan.entity.Partner;
+import com.baouyen.doan.entity.Voucher;
 import com.baouyen.doan.repository.CampaignRepository;
 import com.baouyen.doan.repository.PartnerRepository;
 import com.baouyen.doan.util.RandomUtil;
@@ -64,7 +67,6 @@ public class CampaignServiceImp implements CampaignService {
 
         Page<Campaign> result;
         if (name != null) {
-            // TODO check if we can use ContainingIgnoreCase
             result = campaignRepository.findByNameContainingIgnoreCaseAndPartner(name, partner, pageable);
         } else {
             result = campaignRepository.findByPartner(partner, pageable);
@@ -78,6 +80,7 @@ public class CampaignServiceImp implements CampaignService {
         Partner currentPartner = securityContextService.getCurrentPartner();
         Campaign campaign = campaignConverter.requestDtoToEntity(request);
         campaign.setPartner(currentPartner);
+        currentPartner.setCampaign(campaign);
         campaign.setStatus(CampaignStatus.INITIAL);
         Campaign crreatedCampaign = campaignRepository.save(campaign);
     }
@@ -95,8 +98,10 @@ public class CampaignServiceImp implements CampaignService {
         }
 
         Campaign campaign = campaignOpt.get();
-        List<Voucher> tenPercentDiscountVouchers = createTenPercentDiscountVoucher(request);
-        List<Voucher> twentyPercentDiscountVouchers = createTwentyPercentDiscountVoucher(request);
+        List<Voucher> tenPercentDiscountVouchers = createTenPercentDiscountVoucher(
+                request, campaign);
+        List<Voucher> twentyPercentDiscountVouchers = createTwentyPercentDiscountVoucher(
+                request, campaign);
 
         Set<Voucher> vouchers = new HashSet<>(tenPercentDiscountVouchers);
         vouchers.addAll(twentyPercentDiscountVouchers);
@@ -122,20 +127,21 @@ public class CampaignServiceImp implements CampaignService {
         return true;
     }
 
-    private List<Voucher> createTwentyPercentDiscountVoucher(CreateCampaignVoucherRequest request) {
+    private List<Voucher> createTwentyPercentDiscountVoucher(CreateCampaignVoucherRequest request, Campaign campaign) {
         List<Voucher> vouchers = new ArrayList<>();
         Integer twentyPercentDiscountQuantity = request.getTwentyPercentDiscountQuantity();
         if(twentyPercentDiscountQuantity != null && twentyPercentDiscountQuantity >0){
             for(int i = 0; i < twentyPercentDiscountQuantity; i++){
                 Voucher voucher = createVoucher(request,
-                        VoucherDto.VOUCHER_TYPE.TWENTY_PERCENT_DIS_COUNT);
+                        VoucherDto.VOUCHER_TYPE.TWENTY_PERCENT_DIS_COUNT, campaign);
                 vouchers.add(voucher);
             }
         }
         return vouchers;
     }
 
-    private static Voucher createVoucher(CreateCampaignVoucherRequest request, VoucherDto.VOUCHER_TYPE disCountType) {
+    private static Voucher createVoucher(CreateCampaignVoucherRequest request,
+                                         VoucherDto.VOUCHER_TYPE disCountType, Campaign campaign) {
         Voucher voucher = new Voucher();
         voucher.setDescription(request.getDescription());
         voucher.setType(disCountType);
@@ -143,15 +149,17 @@ public class CampaignServiceImp implements CampaignService {
         voucher.setGameRandomNumber(String.valueOf(RandomUtil.generateRandomNumber(GAME_RANDOM_DIGIT)));
         voucher.setGameRandomString(RandomUtil.generateRandomString(GAME_RANDOM_DIGIT));
         voucher.setStatus(VoucherDto.VOUCHER_STATUS.INITIAL);
+        voucher.setCampaign(campaign);
         return voucher;
     }
 
-    private List<Voucher> createTenPercentDiscountVoucher(CreateCampaignVoucherRequest request) {
+    private List<Voucher> createTenPercentDiscountVoucher(CreateCampaignVoucherRequest request, Campaign campaign) {
         List<Voucher> vouchers = new ArrayList<>();
         Integer tenPercentDiscountQuantity = request.getTenPercentDiscountQuantity();
         if(tenPercentDiscountQuantity != null && tenPercentDiscountQuantity >0){
             for(int i = 0; i < tenPercentDiscountQuantity; i++){
-                Voucher voucher = createVoucher(request, VoucherDto.VOUCHER_TYPE.TEN_PERCENT_DIS_COUNT);
+                Voucher voucher = createVoucher(request,
+                        VoucherDto.VOUCHER_TYPE.TEN_PERCENT_DIS_COUNT, campaign);
                 vouchers.add(voucher);
             }
         }
