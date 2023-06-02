@@ -12,6 +12,10 @@
 
     /*<![CDATA[*/
     $(document).ready(function() {
+        $('#createBtn').click(function() {
+            window.location.href = "/partner/campaign/create";
+        });
+
         var PAGE_SIZE = 3;
 
         $('#searchBtn').click(function() {
@@ -35,7 +39,7 @@
         function searchCampaign(searchCampaignDTO) {
             var csrfToken = $("input[name='_csrf']").val();
             $.ajax({
-                url: '/admin/campaigns/search',
+                url: '/partner/campaigns/search',
                 type: 'POST',
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("X-CSRF-TOKEN", csrfToken);
@@ -102,6 +106,9 @@
                 var campaign = campaigns[i];
 
                 var voucherInfo = campaign.vouchers.length;
+                if (campaign.status !== 'CREATED_VOUCHERS') {
+                    voucherInfo = '<a href=\'/partner/campaigns/' + campaign.id + '/vouchers/create\'>' + 'Create' +'</a>';
+                }
 
                 var row = '<tr>' +
                             '<td>' + campaign.id + '</td>' +
@@ -143,19 +150,13 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/admin/campaign}">Campaigns</a>
+                            <a class="nav-link" th:href="@{/partner/campaign}">Campaigns</a>
                         </li>
+                        <!--                        <li class="nav-item">-->
+                        <!--                            <a class="nav-link" th:href="@{/partner/store}">Store</a>-->
+                        <!--                        </li>-->
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/admin/partner}">Partners</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/admin/user}">Users</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/admin/game}">Games</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/admin/statistic}">Statistic</a>
+                            <a class="nav-link" th:href="@{/partner/profile}">Profile</a>
                         </li>
                         <li class="nav-item">
                             <form th:action="@{/logout}" method="post">
@@ -173,6 +174,7 @@
         <h3>Campaign</h3>
         <input type="text" id="nameFilter" placeholder="Enter name"/>
         <button id="searchBtn">Search</button>
+        <button id="createBtn">Create</button>
     </div>
 
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>

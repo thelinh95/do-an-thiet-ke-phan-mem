@@ -6,6 +6,6 @@ import org.springframework.data.domain.Page;
 
 public interface PartnerService {
     Page<PartnerDto> searchPartner(SearchPartnerRequest request);
-    void createPartner();
+    void createPartner(String userName);
     void deletePartner();
 }

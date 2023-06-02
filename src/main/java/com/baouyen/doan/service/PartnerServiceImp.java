@@ -39,8 +39,10 @@ public class PartnerServiceImp implements PartnerService {
     }
 
     @Override
-    public void createPartner() {
-
+    public void createPartner(String userName) {
+        Partner p = new Partner();
+        p.setName(userName);
+        Partner save = partnerRepository.save(p);
     }
 
     @Override

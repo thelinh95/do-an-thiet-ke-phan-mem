@@ -52,7 +52,7 @@ public class SecurityContextService {
 
     public Partner getCurrentPartner(){
         User currentLoginUser = this.getCurrentLoginUser();
-        List<Partner> partners = partnerRepository.findByNameContainingIgnoreCase(currentLoginUser.getUsername());
+        List<Partner> partners = partnerRepository.findByName(currentLoginUser.getUsername());
         if(partners.isEmpty()) {
             throw new RuntimeException("Exception when get parter login information");
         }

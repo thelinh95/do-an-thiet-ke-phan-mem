@@ -37,12 +37,14 @@ public class DoanApplication {
 
 	@PostConstruct
 	public void setupDbWithData() {
+		/*
 		createCampaign();
 		createCampaign();
 		createCampaign();
 		createCampaign();
 		createCampaign();
 		createCampaignNoVoucher();
+		 */
 	}
 
 	private void createCampaignNoVoucher() {

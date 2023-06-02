@@ -45,6 +45,10 @@ public class UserService implements UserDetailsService {
                 user.getUsername(), user.getPassword(), authorities);
     }
 
+    public Optional<User> findByUsername(String username){
+        return userRepository.findByUsername(username);
+    }
+
     public void createUser(User user) {
         userRepository.save(user);
     }
@@ -54,7 +58,7 @@ public class UserService implements UserDetailsService {
         User admin = new User();
         admin.setUsername("admin");
         admin.setPassword(passwordEncoder.encode("admin"));
-        admin.setRole(Role.ADMIN);
+        admin.setRole(Role.ADMIN.name());
         userRepository.save(admin);
     }
 

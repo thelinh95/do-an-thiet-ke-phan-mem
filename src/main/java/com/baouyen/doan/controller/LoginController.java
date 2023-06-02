@@ -24,7 +24,6 @@ public class LoginController {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         if (userService.authenticate(username, password)) {
-//            return "redirect:/home";
             return "redirect:" + request.getSession().getAttribute("url_prior_login");
         } else {
             request.setAttribute("error", "Invalid username or password.");

@@ -4,29 +4,86 @@
 
     <meta charset="UTF-8" />
     <title>Register</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"/>
+
+    <script>
+    $(document).ready(function() {
+        $('#registerBtn').click(function() {
+             $("#registerForm").submit();
+        });
+
+        $("#registerForm").submit(function(event) {
+            event.preventDefault();
+            var isValid = true;
+
+            // Perform validations
+            var username = $("#username").val().trim();
+            var password = $("#password").val().trim()
+            var confirmPassword = $("#confirmPassword").val().trim();
+
+            if(username === ""){
+                $('#usernameError').text('Username must be not empty');
+                $('#usernameError').show();
+                isValid = false;
+            } else {
+                $('#usernameError').hide();
+            }
+
+            if(password === ""){
+                $('#passwordError').text('Password must be not empty');
+                $('#passwordError').show();
+                isValid = false;
+            } else {
+                $('#passwordError').hide();
+            }
+
+            if(confirmPassword === ""){
+                $('#confirmPasswordError').text('Confirm Password must be not empty');
+                $('#confirmPasswordError').show();
+                isValid = false;
+            } else {
+                if (password !== confirmPassword) {
+                    $('#confirmPasswordError').text('Password and Confirm Password must match.');
+                    $('#confirmPasswordError').show();
+                    isValid = false;
+                } else {
+                    $('#confirmPasswordError').hide();
+                }
+            }
+
+            if(isValid){
+                console.log("isValid");
+                this.submit();
+            }
+        });
+    });
+</script>
 </head>
 <body>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-4 col-md-6 col-sm-8">
             <h3 class="text-center mt-5 mb-4">Register</h3>
-            <form action="/register" method="post">
+            <form action="/register" method="post" id="registerForm">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" name="username" id="username" class="form-control" placeholder="Enter username" />
+                    <div class="invalid-feedback" id="usernameError"></div>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" name="password" id="password" class="form-control" placeholder="Enter password" />
+                    <div class="invalid-feedback" id="passwordError"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Confirm Password</label>
                     <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="Enter confirm password" />
+                    <div class="invalid-feedback" id="confirmPasswordError"></div>
                 </div>
 
                 <div class="form-group">
@@ -37,8 +94,13 @@
                     </select>
                 </div>
 
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+                <button class="btn btn-lg btn-primary btn-block" id="registerBtn">Register</button>
+
+                <div th:if="${error}" class="alert alert-danger mt-3">
+                    <p th:text="${error}"></p>
+                </div>
             </form>
+
         </div>
     </div>
 </div>

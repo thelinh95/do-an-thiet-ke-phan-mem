@@ -1,9 +1,6 @@
 package com.baouyen.doan.service;
 
-import com.baouyen.doan.dto.CampaignResponse;
-import com.baouyen.doan.dto.CreateCampaignRequest;
-import com.baouyen.doan.dto.CreateCampaignVoucherRequest;
-import com.baouyen.doan.dto.SearchCampaignRequest;
+import com.baouyen.doan.dto.*;
 import org.springframework.data.domain.Page;
 
 public interface CampaignService {
@@ -13,5 +10,7 @@ public interface CampaignService {
     void deleteCampaign();
 
     boolean createCampaignVoucher(Long campaignId, CreateCampaignVoucherRequest request);
+
+    Boolean editPartner(Long partnerId, EditPartnerRequest request);
 
 }

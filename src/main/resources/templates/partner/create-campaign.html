@@ -162,9 +162,11 @@
         </nav>
     </div>
     <!-- end common menu -->
+    <div id="header">
+        <h3>Create Campaign</h3>
+    </div>
 
     <div id="create-form">
-        <h3>Create Campaign</h3>
         <div class="form-group"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <label for="name">Name:</label>
         <input id="name" name="name" class="form-control"  type="text"/>

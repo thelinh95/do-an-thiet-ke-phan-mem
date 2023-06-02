@@ -17,7 +17,7 @@ import java.util.*;
 @Service
 public class CampaignServiceImp implements CampaignService {
 
-    public static final int GAME_RANDOM_DIGIT = 4;
+    public static final int GAME_RANDOM_DIGIT = 2;
     @Autowired
     private CampaignRepository campaignRepository;
 
@@ -106,10 +106,26 @@ public class CampaignServiceImp implements CampaignService {
         return true;
     }
 
+    @Override
+    public Boolean editPartner(Long partnerId, EditPartnerRequest request) {
+        Optional<Partner> partnerOpt = partnerRepository.findById(partnerId);
+        if (!partnerOpt.isPresent()) {
+            return false;
+        }
+
+        Partner partner = partnerOpt.get();
+        partner.setStreetAddress(request.getStreetAddress());
+        partner.setWardAddress(request.getWardAddress());
+        partner.setDistrictAddress(request.getDistrictAddress());
+        partner.setProvinceAddress(request.getProvinceAddress());
+        Partner save = partnerRepository.save(partner);
+        return true;
+    }
+
     private List<Voucher> createTwentyPercentDiscountVoucher(CreateCampaignVoucherRequest request) {
         List<Voucher> vouchers = new ArrayList<>();
         Integer twentyPercentDiscountQuantity = request.getTwentyPercentDiscountQuantity();
-        if(twentyPercentDiscountQuantity != null){
+        if(twentyPercentDiscountQuantity != null && twentyPercentDiscountQuantity >0){
             for(int i = 0; i < twentyPercentDiscountQuantity; i++){
                 Voucher voucher = createVoucher(request,
                         VoucherDto.VOUCHER_TYPE.TWENTY_PERCENT_DIS_COUNT);
@@ -133,7 +149,7 @@ public class CampaignServiceImp implements CampaignService {
     private List<Voucher> createTenPercentDiscountVoucher(CreateCampaignVoucherRequest request) {
         List<Voucher> vouchers = new ArrayList<>();
         Integer tenPercentDiscountQuantity = request.getTenPercentDiscountQuantity();
-        if(tenPercentDiscountQuantity != null){
+        if(tenPercentDiscountQuantity != null && tenPercentDiscountQuantity >0){
             for(int i = 0; i < tenPercentDiscountQuantity; i++){
                 Voucher voucher = createVoucher(request, VoucherDto.VOUCHER_TYPE.TEN_PERCENT_DIS_COUNT);
                 vouchers.add(voucher);

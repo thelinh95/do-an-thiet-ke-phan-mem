@@ -30,12 +30,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/").permitAll()
                 .antMatchers("/register", "/register/**").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .antMatchers("/partner/**").hasAuthority("PARTNER")
                 .antMatchers("/user/**").hasAuthority("USER")
 
-                // TODO must login by role admin
                 .antMatchers(HttpMethod.POST, "/admin/campaigns/search").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/admin/games/search").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/admin/partners/search").hasAuthority("ADMIN")
@@ -43,6 +43,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST, "/partner/campaigns/search").hasAuthority("PARTNER")
                 .antMatchers(HttpMethod.POST, "/partner/campaigns").hasAuthority("PARTNER")
+                .antMatchers(HttpMethod.POST, "/partner/campaigns").hasAuthority("PARTNER")
+                .antMatchers(HttpMethod.POST, "partner/campaigns/**/vouchers/create").hasAuthority("PARTNER")
+                .antMatchers(HttpMethod.POST, "partner/**/edit").hasAuthority("PARTNER")
 
                 .anyRequest().authenticated()
                 .and().formLogin()
