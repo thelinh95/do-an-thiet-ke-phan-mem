@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static com.baouyen.doan.dto.VoucherDto.VOUCHER_TYPE.TEN_PERCENT_DIS_COUNT;
-import static com.baouyen.doan.util.RandomUtil.generateRandomCharacter;
 import static com.baouyen.doan.util.RandomUtil.generateRandomString;
 
 @SpringBootApplication

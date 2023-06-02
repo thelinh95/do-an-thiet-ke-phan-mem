@@ -12,11 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    @GetMapping(value = {"", "/home", "/campaign"})
-    public String home() {
-        return "admin/campaign";
-    }
-
     @Autowired
     private CampaignService campaignService;
 
@@ -25,6 +20,11 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping(value = {"", "/home", "/campaign"})
+    public String home() {
+        return "admin/campaign";
+    }
 
     @PostMapping("/campaigns/search")
     @ResponseBody
