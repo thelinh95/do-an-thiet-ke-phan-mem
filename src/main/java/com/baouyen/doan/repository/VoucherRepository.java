@@ -13,6 +13,9 @@ import java.util.List;
 public interface VoucherRepository extends JpaRepository<Voucher, Integer>{
     Page<Voucher> findByCodeContainingIgnoreCase(String name, Pageable pageable);
     Page<Voucher> findByCodeContainingIgnoreCaseAndCampaignIn(String name, List<Campaign> campaigns, Pageable pageable);
+    Page<Voucher> findByCodeContainingIgnoreCaseAndCampaign(String name, Campaign campaign, Pageable pageable);
     Page<Voucher> findByCampaignIn(List<Campaign> campaigns, Pageable pageable);
+
+    Page<Voucher> findByCampaign(Campaign campaign, Pageable pageable);
 
 }

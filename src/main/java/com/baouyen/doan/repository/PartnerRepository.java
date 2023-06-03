@@ -12,7 +12,6 @@ import java.util.Optional;
 @Repository
 public interface PartnerRepository extends JpaRepository<Partner, Integer>{
     Page<Partner> findByNameContainingIgnoreCase(String name, Pageable pageable);
-
     List<Partner> findByNameContainingIgnoreCase(String name);
     List<Partner> findByName(String name);
 

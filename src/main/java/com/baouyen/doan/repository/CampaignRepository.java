@@ -20,4 +20,7 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long>{
 
     Page<Campaign> findByPartner(Partner partner, Pageable pageable);
     List<Campaign> findByPartner(Partner partner);
+    Page<Campaign> findByNameContainingIgnoreCaseAndPartnerIn(String name, List<Partner> partners, Pageable pageable);
+    Page<Campaign> findByPartnerIn(List<Partner> partners, Pageable pageable);
+
 }

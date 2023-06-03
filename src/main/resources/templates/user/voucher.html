@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Campaign</title>
+    <title>Voucher</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"/>
@@ -13,9 +13,10 @@
     /*<![CDATA[*/
     $(document).ready(function() {
         var PAGE_SIZE = 3;
+        var campaignId = getCampaignIdParameter();
 
         $('#searchBtn').click(function() {
-            var nameFilter = processEmptyFilter($('#nameFilter').val());
+            var codeFilter = $('#codeFilter').val();
             var page = 0;
             var size = PAGE_SIZE;
 
@@ -24,31 +25,34 @@
                 size: size
             };
 
-            var searchCampaignDTO = {
-                name: nameFilter,
+            var searchVoucherDTO = {
+                code: codeFilter,
                 paginator: paginator
             };
 
-            searchCampaign(searchCampaignDTO);
+
+
+            searchVoucher(searchVoucherDTO, campaignId);
         });
 
-        function processEmptyFilter(filterValue){
-            if(filterValue.trim() === ""){
-                return null;
-            }
-            return filterValue.trim();
+        function getCampaignIdParameter(){
+            var path = window.location.pathname;
+            var campaignId = path.replace("user/campaigns/", "");
+            campaignId = campaignId.replace("/vouchers","");
+            campaignId = campaignId.replace("/", "");
+            return campaignId;
         }
 
-        function searchCampaign(searchCampaignDTO) {
+        function searchVoucher(searchVoucherDTO, campaignId) {
             var csrfToken = $("input[name='_csrf']").val();
             $.ajax({
-                url: '/admin/campaigns/search',
+                url: '/user/campaign/' + campaignId +  '/vouchers/search',
                 type: 'POST',
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("X-CSRF-TOKEN", csrfToken);
                 },
                 contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(searchCampaignDTO),
+                data: JSON.stringify(searchVoucherDTO),
                 success: function(response) {
                     renderSearchResults(response.content);
                     renderPagination(response.number, response.totalPages);
@@ -68,7 +72,7 @@
             for (var i = 0; i < totalPages; i++) {
                 var page = i;
                 var li = $('<li></li>');
-                var a = $('<a></a>').attr('href', '/campaigns?page=' + page).text(page);
+                var a = $('<a></a>').attr('href', '/vouchers?page=' + page).text(page);
                 li.append(a);
 
                 if (currentPage === i) {
@@ -79,19 +83,19 @@
                     e.preventDefault();
 
                     var newPage = $(this).attr('href').split('=')[1];
-                    var nameFilter = $('#nameFilter').val();
+                    var codeFilter = $('#codeFilter').val();
 
                     var paginator = {
                         page: newPage,
                         size: PAGE_SIZE
                     };
 
-                    var searchCampaignDTO = {
-                        name: nameFilter,
+                    var searchVoucherDTO = {
+                        code: codeFilter,
                         paginator: paginator
                     };
 
-                    searchCampaign(searchCampaignDTO);
+                    searchVoucher(searchVoucherDTO);
 
                 });
 
@@ -101,27 +105,22 @@
             pagination.append(ul);
         }
 
-        function renderSearchResults(campaigns) {
+        function renderSearchResults(vouchers) {
             var tableBody = $('#searchResult');
             tableBody.empty();
 
-            for (var i = 0; i < campaigns.length; i++) {
-                var campaign = campaigns[i];
-
-                var voucherInfo = campaign.vouchers.length;
+            for (var i = 0; i < vouchers.length; i++) {
+                var voucher = vouchers[i];
 
                 var row = '<tr>' +
-                            '<td>' + campaign.id + '</td>' +
-                            '<td>' + campaign.name + '</td>' +
-                            '<td>' + campaign.startDate + '</td>' +
-                            '<td>' + campaign.endDate + '</td>' +
-                            '<td>' + campaign.partner.name + '</td>' +
-                            '<td>' + campaign.games.length + '</td>' +
-                            '<td>' + voucherInfo + '</td>' +
+                            '<td>' + voucher.id + '</td>' +
+                            '<td>' + voucher.code + '</td>' +
+                            '<td>' + voucher.description + '</td>' +
+                            '<td>' + voucher.type + '</td>' +
+                            '<td>' + voucher.createdAt + '</td>' +
                           '</tr>';
                 tableBody.append(row);
             }
-
         }
 
         var paginator = {
@@ -129,11 +128,11 @@
                 size: PAGE_SIZE
             };
 
-            var searchCampaignDTO = {
+            var searchVoucherDTO = {
                 paginator: paginator
             };
 
-        searchCampaign(searchCampaignDTO);
+        searchVoucher(searchVoucherDTO, campaignId);
 
     });
 /*]]>*/
@@ -150,20 +149,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/admin/campaign}">Campaigns</a>
+                            <a class="nav-link" th:href="@{/user/home}">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/admin/partner}">Partners</a>
+                            <a class="nav-link" th:href="@{/user/campaign}">Campaigns</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/admin/user}">Users</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/admin/game}">Games</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/admin/statistic}">Statistic</a>
-                        </li>
+
                         <li class="nav-item">
                             <form th:action="@{/logout}" method="post">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -176,9 +167,10 @@
         </nav>
     </div>
     <!-- end common menu -->
+
     <div id = "header">
-        <h3>Campaign</h3>
-        <input type="text" id="nameFilter" placeholder="Enter name"/>
+        <h3>Voucher</h3>
+        <input type="text" id="codeFilter" placeholder="Enter code"/>
         <button id="searchBtn">Search</button>
     </div>
 
@@ -189,12 +181,10 @@
             <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Partner</th>
-                <th>Number of Game</th>
-                <th>Number of Voucher</th>
+                <th>Code</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Created At</th>
             </tr>
             </thead>
             <tbody id="searchResult">

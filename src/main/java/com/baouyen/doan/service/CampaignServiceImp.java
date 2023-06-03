@@ -1,6 +1,7 @@
 package com.baouyen.doan.service;
 
 import com.baouyen.doan.converter.CampaignConverter;
+import com.baouyen.doan.converter.VoucherConverter;
 import com.baouyen.doan.dto.*;
 import com.baouyen.doan.entity.Campaign;
 import com.baouyen.doan.entity.CampaignStatus;
@@ -8,6 +9,7 @@ import com.baouyen.doan.entity.Partner;
 import com.baouyen.doan.entity.Voucher;
 import com.baouyen.doan.repository.CampaignRepository;
 import com.baouyen.doan.repository.PartnerRepository;
+import com.baouyen.doan.repository.VoucherRepository;
 import com.baouyen.doan.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,11 @@ public class CampaignServiceImp implements CampaignService {
     @Autowired
     private PartnerRepository partnerRepository;
 
+    @Autowired
+    private VoucherRepository voucherRepository;
+
+    @Autowired
+    private VoucherConverter voucherConverter;
 
     @Override
     public Page<CampaignResponse> searchCampaign(SearchCampaignRequest request) {
@@ -52,6 +59,40 @@ public class CampaignServiceImp implements CampaignService {
 
         return result.map(c -> campaignConverter.entityToResponseDto(c));
     }
+
+    @Override
+    public Page<CampaignResponse> searchCampaign(UserSearchCampaignRequest request) {
+        String name = request.getName();
+
+        Paginator paginator = request.getPaginator();
+        int page = paginator.getPage();
+        int size = paginator.getSize();
+
+        Pageable pageable = new PageRequest(page, size);
+
+        Page<Campaign> result;
+        // TODO find only campaign was not expired.
+        if (name != null) {
+            if(request.getPartnerName() != null){
+                List<Partner> partners = partnerRepository.findByNameContainingIgnoreCase(request.getPartnerName());
+                result = campaignRepository.findByNameContainingIgnoreCaseAndPartnerIn(
+                        name, partners, pageable);
+            } else {
+                result = campaignRepository.findByNameContainingIgnoreCase(name, pageable);
+            }
+
+        } else {
+            if(request.getPartnerName() != null){
+                List<Partner> partners = partnerRepository.findByNameContainingIgnoreCase(request.getPartnerName());
+                result = campaignRepository.findByPartnerIn(partners, pageable);
+            } else {
+                result = campaignRepository.findAll(pageable);
+            }
+        }
+
+        return result.map(c -> campaignConverter.entityToResponseDto(c));
+    }
+
 
     @Override
     public Page<CampaignResponse> searchPartnerCampaign(SearchCampaignRequest request) {
@@ -112,6 +153,8 @@ public class CampaignServiceImp implements CampaignService {
         return true;
     }
 
+
+
     @Override
     public Boolean editPartner(Long partnerId, EditPartnerRequest request) {
         Optional<Partner> partnerOpt = partnerRepository.findById(partnerId);
@@ -126,6 +169,38 @@ public class CampaignServiceImp implements CampaignService {
         partner.setProvinceAddress(request.getProvinceAddress());
         Partner save = partnerRepository.save(partner);
         return true;
+    }
+
+    @Override
+    public Page<VoucherDto> searchCampaignVoucher(Long campaignId, SearchCampaignVoucherRequest request) {
+        String code = request.getCode();
+
+        Paginator paginator = request.getPaginator();
+        int page = paginator.getPage();
+        int size = paginator.getSize();
+
+        Pageable pageable = new PageRequest(page, size);
+
+        // TODO throw exception when campaign was not found or it's already expired.
+        Optional<Campaign> campaignOpt = campaignRepository.findById(campaignId);
+
+        Page<Voucher> result;
+
+        if (code != null) {
+            if(campaignOpt.isPresent()) {
+                result = voucherRepository.findByCodeContainingIgnoreCaseAndCampaign(code, campaignOpt.get(), pageable);
+            } else {
+                result = voucherRepository.findByCodeContainingIgnoreCase(code, pageable);
+            }
+        } else {
+            if(campaignOpt.isPresent()) {
+                result = voucherRepository.findByCampaign(campaignOpt.get(), pageable);
+            } else {
+                result = voucherRepository.findAll(pageable);
+            }
+        }
+
+        return result.map(c -> voucherConverter.entityToDto(c));
     }
 
     private List<Voucher> createTwentyPercentDiscountVoucher(CreateCampaignVoucherRequest request, Campaign campaign) {

@@ -25,6 +25,10 @@ color: #fff;
 margin-top: 80px;
 }
 
+.search_component {
+    margin-left: 20px;
+}
+
 #header {
 position: relative;
 top: -40px;

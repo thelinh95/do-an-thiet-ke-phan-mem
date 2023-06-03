@@ -32,6 +32,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserConverter userConverter;
 
+    @Autowired
+    private PartnerService partnerService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> userOpt = userRepository.findByUsername(username);
@@ -54,6 +57,12 @@ public class UserService implements UserDetailsService {
     }
 
     @PostConstruct
+    public void createDefaultUsers(){
+        createAdminUser();
+        createPartnerUsers();
+        createNormalUsers();
+    }
+
     public void createAdminUser() {
         User admin = new User();
         admin.setUsername("admin");
@@ -61,6 +70,37 @@ public class UserService implements UserDetailsService {
         admin.setRole(Role.ADMIN.name());
         userRepository.save(admin);
     }
+
+    public void createPartnerUsers() {
+        User partner = new User();
+        partner.setUsername("partner1");
+        partner.setPassword(passwordEncoder.encode("partner"));
+        partner.setRole(Role.PARTNER.name());
+        userRepository.save(partner);
+        partnerService.createPartner(partner.getUsername());
+
+        partner = new User();
+        partner.setUsername("partner2");
+        partner.setPassword(passwordEncoder.encode("partner"));
+        partner.setRole(Role.PARTNER.name());
+        userRepository.save(partner);
+        partnerService.createPartner(partner.getUsername());
+    }
+
+    public void createNormalUsers() {
+        User user = new User();
+        user.setUsername("user1");
+        user.setPassword(passwordEncoder.encode("user"));
+        user.setRole(Role.USER.name());
+        userRepository.save(user);
+
+        user = new User();
+        user.setUsername("user2");
+        user.setPassword(passwordEncoder.encode("user"));
+        user.setRole(Role.USER.name());
+        userRepository.save(user);
+    }
+
 
     public boolean authenticate(String username, String password) {
         Optional<User> userOpt = userRepository.findByUsername(username);

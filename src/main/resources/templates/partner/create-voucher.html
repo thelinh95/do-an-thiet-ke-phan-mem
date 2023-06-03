@@ -64,10 +64,10 @@
             };
 
             var path = window.location.pathname;
-            var camapaignID = path.replace("/partner/campaigns", "");
-            camapaignID = camapaignID.replace("/vouchers/create","");
+            var campaignID = path.replace("/partner/campaigns", "");
+            campaignID = campaignID.replace("/vouchers/create","");
 
-            createVoucher(createVoucherDTO, camapaignID);
+            createVoucher(createVoucherDTO, campaignID);
         });
 
         String.prototype.toNumber = function(){

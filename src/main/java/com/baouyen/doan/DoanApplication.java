@@ -4,8 +4,10 @@ import com.baouyen.doan.dto.GameType;
 import com.baouyen.doan.dto.VoucherDto;
 import com.baouyen.doan.entity.*;
 import com.baouyen.doan.repository.CampaignRepository;
+import com.baouyen.doan.repository.GameRepository;
 import com.baouyen.doan.repository.PartnerRepository;
 import com.baouyen.doan.util.RandomUtil;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,6 +25,9 @@ import static com.baouyen.doan.util.RandomUtil.generateRandomString;
 @EnableJpaAuditing
 @ComponentScan
 public class DoanApplication {
+	@Autowired
+	GameRepository gameRepository;
+
 	@Autowired
 	CampaignRepository campaignRepository;
 
@@ -44,6 +49,8 @@ public class DoanApplication {
 		createCampaign();
 		createCampaignNoVoucher();
 		 */
+
+		createGame();
 	}
 
 	private void createCampaignNoVoucher() {
@@ -113,6 +120,17 @@ public class DoanApplication {
 		}
 
 		result.setGames(games);
+	}
+
+	private void createGame() {
+
+		for(int i=0; i<5; i++) {
+			Game game = new Game();
+			int gameTypeInt = new Random().nextInt(2);
+			game.setName("game " + generateRandomString(2));
+			game.setGameType(GameType.values()[gameTypeInt]);
+			gameRepository.save(game);
+		}
 	}
 
 	private Partner createPartner() {
