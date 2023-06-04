@@ -30,8 +30,6 @@
                 paginator: paginator
             };
 
-
-
             searchVoucher(searchVoucherDTO, campaignId);
         });
 
@@ -112,12 +110,15 @@
             for (var i = 0; i < vouchers.length; i++) {
                 var voucher = vouchers[i];
 
+                playGameLink = '<a href=\'/voucher/' + voucher.id + '/redeem\'>' + 'Redeem Voucher' +'</a>';
+
                 var row = '<tr>' +
                             '<td>' + voucher.id + '</td>' +
                             '<td>' + voucher.code + '</td>' +
                             '<td>' + voucher.description + '</td>' +
                             '<td>' + voucher.type + '</td>' +
                             '<td>' + voucher.createdAt + '</td>' +
+                            '<td>' + '</td>' +
                           '</tr>';
                 tableBody.append(row);
             }
@@ -185,6 +186,7 @@
                 <th>Description</th>
                 <th>Type</th>
                 <th>Created At</th>
+                <th></th>
             </tr>
             </thead>
             <tbody id="searchResult">

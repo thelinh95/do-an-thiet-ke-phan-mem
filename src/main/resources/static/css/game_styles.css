@@ -1,0 +1,19 @@
+#game-board {
+    text-align: center;
+    margin-top: 50px;
+}
+
+#letter-inputs input {
+    width: 30px;
+    text-transform: uppercase;
+    margin: 5px;
+}
+
+#submit-button {
+    margin-top: 10px;
+}
+
+#result-message {
+    margin-top: 20px;
+    font-weight: bold;
+}

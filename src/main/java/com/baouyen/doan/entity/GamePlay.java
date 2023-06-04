@@ -1,8 +1,9 @@
 package com.baouyen.doan.entity;
 
 
+import com.baouyen.doan.dto.GamePlayDto;
+
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 public class GamePlay {
@@ -17,11 +18,14 @@ public class GamePlay {
     @ManyToOne
     private User user;
 
-    @Temporal(TemporalType.DATE)
-    private Date playAt;
+    private Long playAt;
 
     @Column
     private String playData;
+
+    @Column
+    @Enumerated
+    private GamePlayDto.Error error;
 
     public Long getId() {
         return id;
@@ -47,11 +51,11 @@ public class GamePlay {
         this.user = user;
     }
 
-    public Date getPlayAt() {
+    public Long getPlayAt() {
         return playAt;
     }
 
-    public void setPlayAt(Date playAt) {
+    public void setPlayAt(Long playAt) {
         this.playAt = playAt;
     }
 
@@ -61,5 +65,13 @@ public class GamePlay {
 
     public void setPlayData(String playData) {
         this.playData = playData;
+    }
+
+    public GamePlayDto.Error getError() {
+        return error;
+    }
+
+    public void setError(GamePlayDto.Error error) {
+        this.error = error;
     }
 }

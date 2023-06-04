@@ -8,123 +8,6 @@
 
     <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}" />
 
-    <script th:inline="javascript">
-
-    /*<![CDATA[*/
-    $(document).ready(function() {
-        var PAGE_SIZE = 3;
-
-        $('#searchBtn').click(function() {
-            var nameFilter = $('#nameFilter').val();
-            var page = 0;
-            var size = PAGE_SIZE;
-
-            var paginator = {
-                page: page,
-                size: size
-            };
-
-            var searchPartnerDTO = {
-                name: nameFilter,
-                paginator: paginator
-            };
-
-            searchPartner(searchPartnerDTO);
-        });
-
-        function searchPartner(searchPartnerDTO) {
-            $.ajax({
-                url: '/admin/partners/search',
-                type: 'POST',
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(searchPartnerDTO),
-                success: function(response) {
-                    renderSearchResults(response.content);
-                    renderPagination(response.number, response.totalPages);
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                }
-            });
-        }
-
-        function renderPagination(currentPage, totalPages) {
-            var pagination = $('.pagination');
-            pagination.empty();
-
-            var ul = $('<ul></ul>');
-
-            for (var i = 0; i < totalPages; i++) {
-                var page = i;
-                var li = $('<li></li>');
-                var a = $('<a></a>').attr('href', '/partners?page=' + page).text(page);
-                li.append(a);
-
-                if (currentPage === i) {
-                    li.addClass('active');
-                }
-
-                a.on('click', function(e) {
-                    e.preventDefault();
-
-                    var newPage = $(this).attr('href').split('=')[1];
-                    var nameFilter = $('#nameFilter').val();
-
-                    var paginator = {
-                        page: newPage,
-                        size: PAGE_SIZE
-                    };
-
-                    var searchPartnerDTO = {
-                        name: nameFilter,
-                        paginator: paginator
-                    };
-
-                    searchPartner(searchPartnerDTO);
-
-                });
-
-                ul.append(li);
-
-            }
-            pagination.append(ul);
-        }
-
-        function renderSearchResults(partners) {
-            var tableBody = $('#searchResult');
-            tableBody.empty();
-
-            for (var i = 0; i < partners.length; i++) {
-                var partner = partners[i];
-                var row = '<tr>' +
-                            '<td>' + partner.id + '</td>' +
-                            '<td>' + partner.name + '</td>' +
-                            '<td>' + partner.streetAddress + '</td>' +
-                            '<td>' + partner.wardAddress + '</td>' +
-                            '<td>' + partner.districtAddress + '</td>' +
-                            '<td>' + partner.provinceAddress + '</td>' +
-                          '</tr>';
-                tableBody.append(row);
-            }
-
-        }
-
-        var paginator = {
-                page: 0,
-                size: PAGE_SIZE
-            };
-
-            var searchPartnerDTO = {
-                paginator: paginator
-            };
-
-        searchPartner(searchPartnerDTO);
-
-    });
-/*]]>*/
-
-
-    </script>
 </head>
 <body>
 <div class="container">
@@ -163,34 +46,43 @@
     <!-- end common menu -->
     <div id = "header">
         <h2>Statistic</h2>
-        <input type="text" id="nameFilter" placeholder="Enter name"/>
-        <button id="searchBtn">Search</button>
     </div>
 
     <div id="table">
         <table border="1" class="table table-striped table-responsive-md">
             <thead>
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Street Address</th>
-                <th>Ward Address</th>
-                <th>District Address</th>
-                <th>Province Address</th>
+                <th>Metric</th>
+                <th>Value</th>
             </tr>
             </thead>
-            <tbody id="searchResult">
+            <tbody>
+               <tr>
+                   <td>Total vouchers</td>
+                   <td>${totalVouchers}</td>
+               </tr>
+               <tr>
+                   <td>Number used vouchers</td>
+                   <td>${numberUsedVouchers}</td>
+               </tr>
+               <tr>
+                   <td>Number expired vouchers</td>
+                   <td>${numberExpiredVouchers}</td>
+               </tr>
+
+               <tr>
+                   <td>Total user play game</td>
+                   <td>${totalUserPlayGame}</td>
+               </tr>
+               <tr>
+                   <td>Total user win game</td>
+                   <td>${totalUserWinGame}</td>
+               </tr>
+
             </tbody>
         </table>
     </div>
 
-    <div class="pagination">
-        <ul>
-            <li th:each="page : ${pages}">
-                <a href="#" th:text="${page}"></a>
-            </li>
-        </ul>
-    </div>
 </div>
 </body>
 </html>

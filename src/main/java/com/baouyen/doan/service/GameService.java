@@ -1,8 +1,6 @@
 package com.baouyen.doan.service;
 
-import com.baouyen.doan.dto.CreateGameRequest;
-import com.baouyen.doan.dto.GameDto;
-import com.baouyen.doan.dto.SearchGameRequest;
+import com.baouyen.doan.dto.*;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -14,4 +12,7 @@ public interface GameService {
 
     List<GameDto> getAllGames();
 
+    GamePlayResponse getVoucherGame(Long voucherId);
+
+    GameResult submitGame(Long voucherId, RedeemGameRequest request);
 }

@@ -10,6 +10,7 @@ import com.baouyen.doan.entity.Voucher;
 import com.baouyen.doan.repository.CampaignRepository;
 import com.baouyen.doan.repository.PartnerRepository;
 import com.baouyen.doan.repository.VoucherRepository;
+import com.baouyen.doan.util.DateTimeUtil;
 import com.baouyen.doan.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,7 +53,7 @@ public class CampaignServiceImp implements CampaignService {
 
         Page<Campaign> result;
         if (name != null) {
-            result = campaignRepository.findByNameContainingIgnoreCase(name, pageable);
+            result = campaignRepository.searchCampaigns(name, pageable);
         } else {
             result = campaignRepository.findAll(pageable);
         }
@@ -71,14 +72,14 @@ public class CampaignServiceImp implements CampaignService {
         Pageable pageable = new PageRequest(page, size);
 
         Page<Campaign> result;
-        // TODO find only campaign was not expired.
         if (name != null) {
             if(request.getPartnerName() != null){
                 List<Partner> partners = partnerRepository.findByNameContainingIgnoreCase(request.getPartnerName());
-                result = campaignRepository.findByNameContainingIgnoreCaseAndPartnerIn(
-                        name, partners, pageable);
+                result = campaignRepository.searchCampaigns(
+                        name, partners, CampaignStatus.CREATED_VOUCHERS, pageable);
             } else {
-                result = campaignRepository.findByNameContainingIgnoreCase(name, pageable);
+                result = campaignRepository.searchCampaigns(name,
+                        CampaignStatus.CREATED_VOUCHERS, pageable);
             }
 
         } else {
@@ -86,7 +87,7 @@ public class CampaignServiceImp implements CampaignService {
                 List<Partner> partners = partnerRepository.findByNameContainingIgnoreCase(request.getPartnerName());
                 result = campaignRepository.findByPartnerIn(partners, pageable);
             } else {
-                result = campaignRepository.findAll(pageable);
+                result = campaignRepository.findByStatus(CampaignStatus.CREATED_VOUCHERS, pageable);
             }
         }
 
@@ -108,7 +109,7 @@ public class CampaignServiceImp implements CampaignService {
 
         Page<Campaign> result;
         if (name != null) {
-            result = campaignRepository.findByNameContainingIgnoreCaseAndPartner(name, partner, pageable);
+            result = campaignRepository.searchCampaigns(name, partner, pageable);
         } else {
             result = campaignRepository.findByPartner(partner, pageable);
         }
@@ -171,6 +172,12 @@ public class CampaignServiceImp implements CampaignService {
         return true;
     }
 
+    /**
+     * Return only voucher which status is not USED
+     * @param campaignId
+     * @param request
+     * @return
+     */
     @Override
     public Page<VoucherDto> searchCampaignVoucher(Long campaignId, SearchCampaignVoucherRequest request) {
         String code = request.getCode();
@@ -188,15 +195,19 @@ public class CampaignServiceImp implements CampaignService {
 
         if (code != null) {
             if(campaignOpt.isPresent()) {
-                result = voucherRepository.findByCodeContainingIgnoreCaseAndCampaign(code, campaignOpt.get(), pageable);
+                result = voucherRepository.searchVoucher(code, campaignOpt.get(),
+                        VoucherDto.VOUCHER_STATUS.INITIAL, pageable);
             } else {
-                result = voucherRepository.findByCodeContainingIgnoreCase(code, pageable);
+                result = voucherRepository.searchVoucher(code,
+                        VoucherDto.VOUCHER_STATUS.INITIAL, pageable);
             }
         } else {
             if(campaignOpt.isPresent()) {
-                result = voucherRepository.findByCampaign(campaignOpt.get(), pageable);
+                result = voucherRepository.searchVoucher(campaignOpt.get(),
+                        VoucherDto.VOUCHER_STATUS.INITIAL, pageable);
             } else {
-                result = voucherRepository.findAll(pageable);
+                result = voucherRepository.findByStatus(
+                        VoucherDto.VOUCHER_STATUS.INITIAL, pageable);
             }
         }
 
@@ -222,10 +233,12 @@ public class CampaignServiceImp implements CampaignService {
         voucher.setDescription(request.getDescription());
         voucher.setType(disCountType);
         voucher.setCode(UUID.randomUUID().toString());
-        voucher.setGameRandomNumber(String.valueOf(RandomUtil.generateRandomNumber(GAME_RANDOM_DIGIT)));
+        voucher.setGameRandomNumber(String.valueOf(RandomUtil.generateRandomNumber(GAME_RANDOM_DIGIT))
+                .toUpperCase());
         voucher.setGameRandomString(RandomUtil.generateRandomString(GAME_RANDOM_DIGIT));
         voucher.setStatus(VoucherDto.VOUCHER_STATUS.INITIAL);
         voucher.setCampaign(campaign);
+        voucher.setExpiredAt(DateTimeUtil.getExpiredTimeEpoch());
         return voucher;
     }
 

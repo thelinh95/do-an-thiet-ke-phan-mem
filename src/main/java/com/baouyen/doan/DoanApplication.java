@@ -104,7 +104,8 @@ public class DoanApplication {
 		voucher.setType(TEN_PERCENT_DIS_COUNT);
 		voucher.setStatus(VoucherDto.VOUCHER_STATUS.INITIAL);
 
-		voucher.setGameRandomNumber(String.valueOf(RandomUtil.generateRandomNumber(6)));
+		voucher.setGameRandomNumber(String.valueOf(RandomUtil.generateRandomNumber(6))
+				.toUpperCase());
 		result.setVouchers(new HashSet<>(Collections.singletonList(voucher)));
 	}
 

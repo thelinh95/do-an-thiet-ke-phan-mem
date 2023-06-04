@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Game Lottery Number Guessing</title>
+    <link rel="stylesheet" th:href="@{/css/game_styles.css}" type="text/css" />
+
+</head>
+<body>
+<h1>Game Lottery Number Guessing</h1>
+<div id="game-board">
+    <div id="letter-inputs"></div>
+    <button id="submit-button">Submit</button>
+</div>
+<div id="result-message" style="display: none;"></div>
+
+<script th:src="@{/js/lottery-digit-game-script.js}" type="text/javascript"></script>
+<script th:inline="javascript">
+    var voucherId = /*[[${voucherId}]]*/;
+    var gameRandomDigit = /*[[${gameRandomDigit}]]*/;
+    var gameType = /*[[${gameType}]]*/;
+    console.log(voucherId);
+    console.log(gameRandomDigit);
+</script>
+
+</body>
+</html>

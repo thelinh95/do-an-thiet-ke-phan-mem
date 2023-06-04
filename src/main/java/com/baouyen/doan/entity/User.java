@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 public class User implements UserDetails {
@@ -20,6 +21,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String role;
+
+    @OneToMany(mappedBy = "winnerUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Voucher> vouchers;
 
     public Long getId() {
         return id;

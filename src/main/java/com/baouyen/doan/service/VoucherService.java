@@ -8,4 +8,11 @@ public interface VoucherService {
     Page<VoucherDto> searchVoucher(SearchVoucherRequest request);
     Page<VoucherDto> searchPartnerVoucher(SearchVoucherRequest request);
 
+    Page<VoucherDto> searchUserVoucher(SearchVoucherRequest request);
+
+    long getTotalVoucher();
+
+    long getNumberUsedVouchers();
+
+    long getNumberExpiredVouchers();
 }

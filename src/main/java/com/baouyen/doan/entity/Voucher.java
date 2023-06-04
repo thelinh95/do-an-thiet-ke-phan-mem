@@ -42,6 +42,15 @@ public class Voucher {
     @CreatedDate
     private Date createdAt;
 
+    @Column
+    private Long expiredAt;
+
+    @ManyToOne
+    @JoinColumn(name = "voucher_id")
+    private User winnerUser;
+
+    public static final int EXPIRED_DAYS = 7;
+
     public Long getId() {
         return id;
     }
@@ -112,5 +121,21 @@ public class Voucher {
 
     public void setCampaign(Campaign campaign) {
         this.campaign = campaign;
+    }
+
+    public Long getExpiredAt() {
+        return expiredAt;
+    }
+
+    public void setExpiredAt(Long expiredAt) {
+        this.expiredAt = expiredAt;
+    }
+
+    public User getWinnerUser() {
+        return winnerUser;
+    }
+
+    public void setWinnerUser(User winnerUser) {
+        this.winnerUser = winnerUser;
     }
 }

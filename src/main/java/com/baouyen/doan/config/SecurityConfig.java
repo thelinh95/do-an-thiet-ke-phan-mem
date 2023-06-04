@@ -54,6 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/user/campaigns/**/vouchers").hasAuthority("USER")
                 .antMatchers(HttpMethod.POST, "/user/campaigns").hasAuthority("USER")
 
+                .antMatchers(HttpMethod.POST, "/voucher/**/redeem").hasAuthority("USER")
+
                 .anyRequest().authenticated()
                 .and().formLogin()
                 .loginPage("/login")

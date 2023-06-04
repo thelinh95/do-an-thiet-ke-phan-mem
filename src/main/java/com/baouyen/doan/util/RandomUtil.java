@@ -22,6 +22,6 @@ public class RandomUtil {
         for (int i = 0; i < length; i++) {
             sb.append(generateRandomCharacter());
         }
-        return sb.toString();
+        return sb.toString().toUpperCase();
     }
 }

@@ -3,7 +3,6 @@ package com.baouyen.doan.dto;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.util.Date;
 
 
 public class GamePlayDto {
@@ -11,10 +10,31 @@ public class GamePlayDto {
     private GameDto game;
     private UserDto user;
 
-    @Temporal(TemporalType.DATE)
-    private Date playAt;
+    private Long playAt;
 
     private String playData;
+
+    private Error error;
+
+    public enum Error {
+        VOUCHER_NOT_FOUND("Voucher was not found"),
+        VOUCHER_EXPIRED("Voucher expired"),
+        VOUCHER_HAS_USED("Voucher is already used");
+
+        private String code;
+
+        Error(String s) {
+            this.code = s;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+    }
 
     public GameDto getGame() {
         return game;
@@ -32,11 +52,11 @@ public class GamePlayDto {
         this.user = user;
     }
 
-    public Date getPlayAt() {
+    public Long getPlayAt() {
         return playAt;
     }
 
-    public void setPlayAt(Date playAt) {
+    public void setPlayAt(Long playAt) {
         this.playAt = playAt;
     }
 
@@ -54,5 +74,13 @@ public class GamePlayDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Error getError() {
+        return error;
+    }
+
+    public void setError(Error error) {
+        this.error = error;
     }
 }

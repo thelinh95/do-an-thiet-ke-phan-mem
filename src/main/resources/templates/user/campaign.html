@@ -113,10 +113,7 @@
             for (var i = 0; i < campaigns.length; i++) {
                 var campaign = campaigns[i];
 
-                var voucherInfo = campaign.vouchers.length;
-                if (campaign.status !== 'CREATED_VOUCHERS') {
-                    voucherInfo = '<a href=\'/user/campaigns/' + campaign.id + '/vouchers\'>' + 'Find Voucher' +'</a>';
-                }
+                voucherInfo = '<a href=\'/user/campaigns/' + campaign.id + '/vouchers\'>' + 'Find Voucher' +'</a>';
 
                 var row = '<tr>' +
                             '<td>' + campaign.id + '</td>' +

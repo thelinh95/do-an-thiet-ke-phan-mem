@@ -3,6 +3,7 @@ package com.baouyen.doan.controller;
 import com.baouyen.doan.dto.*;
 import com.baouyen.doan.service.CampaignService;
 import com.baouyen.doan.service.UserService;
+import com.baouyen.doan.service.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,9 @@ public class UserController {
 
     @Autowired
     private CampaignService campaignService;
+
+    @Autowired
+    private VoucherService voucherService;
 
     @GetMapping(value = {"", "/home"})
     public String home() {
@@ -52,6 +56,12 @@ public class UserController {
     public Page<VoucherDto> searchCampaignVoucher(@PathVariable Long campaignId,
                                                   @RequestBody SearchCampaignVoucherRequest request) {
         return campaignService.searchCampaignVoucher(campaignId, request);
+    }
+
+    @PostMapping("/vouchers/search")
+    @ResponseBody
+    public Page<VoucherDto> searchVoucher(@RequestBody SearchVoucherRequest request) {
+        return voucherService.searchPartnerVoucher(request);
     }
 
 }
