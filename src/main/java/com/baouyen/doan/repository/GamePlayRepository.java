@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GamePlayRepository extends JpaRepository<GamePlay, Integer>{
-    @Query("SELECT COUNT(v) FROM GamePlay gp WHERE gp.playAt IS NOT NULL")
+    @Query("SELECT COUNT(*) FROM GamePlay gp WHERE gp.playAt IS NOT NULL")
     long countPlayGames();
 }

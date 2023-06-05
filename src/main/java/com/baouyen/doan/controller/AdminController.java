@@ -48,11 +48,6 @@ public class AdminController {
         return "admin/game";
     }
 
-    @GetMapping("/statistic")
-    public String statistic() {
-        return "admin/statistic";
-    }
-
     @GetMapping("/user")
     public String user() {
         return "admin/user";

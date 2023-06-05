@@ -47,9 +47,7 @@ public class Voucher {
 
     @ManyToOne
     @JoinColumn(name = "voucher_id")
-    private User winnerUser;
-
-    public static final int EXPIRED_DAYS = 7;
+    private User user;
 
     public Long getId() {
         return id;
@@ -131,11 +129,11 @@ public class Voucher {
         this.expiredAt = expiredAt;
     }
 
-    public User getWinnerUser() {
-        return winnerUser;
+    public User getUser() {
+        return user;
     }
 
-    public void setWinnerUser(User winnerUser) {
-        this.winnerUser = winnerUser;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

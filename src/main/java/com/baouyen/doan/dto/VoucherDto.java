@@ -17,6 +17,11 @@ public class VoucherDto {
     private Date createdAt;
 
     private VOUCHER_STATUS status;
+    private String gameRandomString;
+
+    public void setGameRandomString(String gameRandomString) {
+        this.gameRandomString = gameRandomString;
+    }
 
     public enum VOUCHER_TYPE {
         TEN_PERCENT_DIS_COUNT ("ten percent discount"),
@@ -95,5 +100,9 @@ public class VoucherDto {
 
     public void setStatus(VOUCHER_STATUS status) {
         this.status = status;
+    }
+
+    public String getGameRandomString() {
+        return gameRandomString;
     }
 }

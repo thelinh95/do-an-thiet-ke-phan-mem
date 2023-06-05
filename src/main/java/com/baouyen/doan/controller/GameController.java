@@ -55,12 +55,13 @@ public class GameController {
         model.addAttribute("voucherId", voucherId);
         model.addAttribute("gameRandomDigit", GAME_RANDOM_DIGIT);
         model.addAttribute("gameType", gameType.name());
-        return gameView;
+        String gameViewPrefix = "game/";
+        return gameViewPrefix + gameView;
     }
 
     @PostMapping("/voucher/{voucherId}/redeem")
     @ResponseBody
-    public GameResult submitGame(@PathVariable Long voucherId, RedeemGameRequest request){
+    public GameResult submitGame(@PathVariable Long voucherId, @RequestBody RedeemGameRequest request){
         return gameService.submitGame(voucherId, request);
     }
 }

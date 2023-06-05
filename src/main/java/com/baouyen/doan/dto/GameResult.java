@@ -1,19 +1,15 @@
 package com.baouyen.doan.dto;
 
 public class GameResult {
-    private boolean isWin;
+    private boolean win;
     private String failedErrorMessage;
 
     // contain voucher code and note used before time.
     // TODO can add store location: real address or online.
     private String winMessage;
 
-    public boolean isWin() {
-        return isWin;
-    }
-
     public void setWin(boolean win) {
-        isWin = win;
+        this.win = win;
     }
 
     public String getFailedErrorMessage() {
@@ -30,5 +26,9 @@ public class GameResult {
 
     public void setWinMessage(String winMessage) {
         this.winMessage = winMessage;
+    }
+
+    public boolean isWin() {
+        return win;
     }
 }

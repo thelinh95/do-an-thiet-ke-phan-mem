@@ -16,6 +16,7 @@ public class VoucherConverter {
         result.setType(voucher.getType().getCode());
         result.setStatus(voucher.getStatus());
         result.setGameRandomNumber(voucher.getGameRandomNumber());
+        result.setGameRandomString(voucher.getGameRandomString());
 
         return result;
 

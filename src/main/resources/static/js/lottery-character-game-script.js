@@ -20,21 +20,21 @@ document.addEventListener("DOMContentLoaded", function() {
         var inputs = document.querySelectorAll("#letter-inputs input");
         for (var i = 0; i < inputs.length; i++) {
             var letter = inputs[i].value.toUpperCase();
-            if (letter.match(/[A-Z]/)) {
-                guess += letter;
-            }
+            guess += letter;
         }
 
         if (guess.length === numOfLetters) {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/voucher/{voucherId}/redeem", true);
+            xhr.open("POST", '/voucher/' + voucherId + '/redeem', true);
             xhr.setRequestHeader("Content-Type", "application/json");
+            var csrfToken = $("input[name='_csrf']").val();
+            xhr.setRequestHeader("X-CSRF-TOKEN", csrfToken);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
                     console.log(response);
 
-                    if (response.isWin === true) {
+                    if (response.win === true) {
                         resultMessage.textContent = response.winMessage;
                     } else {
                         resultMessage.textContent = response.failedErrorMessage;
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
                               playedAt: new Date().getTime(),
                               playData: guess
                                  };
-            xhr.send(JSON.stringify({ guess: guess }));
+            xhr.send(JSON.stringify(gamePlayDTO));
         }
     });
 });

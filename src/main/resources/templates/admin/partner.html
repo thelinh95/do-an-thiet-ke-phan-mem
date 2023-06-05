@@ -94,6 +94,14 @@
             pagination.append(ul);
         }
 
+        function nullOrEmptyStr(input){
+            if (input === null) {
+                return "";
+            } else {
+                return input;
+            }
+        }
+
         function renderSearchResults(partners) {
             var tableBody = $('#searchResult');
             tableBody.empty();
@@ -103,10 +111,10 @@
                 var row = '<tr>' +
                             '<td>' + partner.id + '</td>' +
                             '<td>' + partner.name + '</td>' +
-                            '<td>' + partner.streetAddress + '</td>' +
-                            '<td>' + partner.wardAddress + '</td>' +
-                            '<td>' + partner.districtAddress + '</td>' +
-                            '<td>' + partner.provinceAddress + '</td>' +
+                            '<td>' + nullOrEmptyStr(partner.streetAddress) + '</td>' +
+                            '<td>' + nullOrEmptyStr(partner.wardAddress) + '</td>' +
+                            '<td>' + nullOrEmptyStr(partner.districtAddress) + '</td>' +
+                            '<td>' + nullOrEmptyStr(partner.provinceAddress) + '</td>' +
                           '</tr>';
                 tableBody.append(row);
             }

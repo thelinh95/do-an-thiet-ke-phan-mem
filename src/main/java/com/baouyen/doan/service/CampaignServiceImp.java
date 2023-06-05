@@ -238,7 +238,7 @@ public class CampaignServiceImp implements CampaignService {
         voucher.setGameRandomString(RandomUtil.generateRandomString(GAME_RANDOM_DIGIT));
         voucher.setStatus(VoucherDto.VOUCHER_STATUS.INITIAL);
         voucher.setCampaign(campaign);
-        voucher.setExpiredAt(DateTimeUtil.getExpiredTimeEpoch());
+        voucher.setExpiredAt(DateTimeUtil.getEndDateEpoch(campaign.getEndDate()));
         return voucher;
     }
 

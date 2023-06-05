@@ -22,7 +22,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String role;
 
-    @OneToMany(mappedBy = "winnerUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Voucher> vouchers;
 
     public Long getId() {

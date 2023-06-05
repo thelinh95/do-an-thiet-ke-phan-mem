@@ -107,6 +107,7 @@
                             '<td>' + voucher.code + '</td>' +
                             '<td>' + voucher.description + '</td>' +
                             '<td>' + voucher.type + '</td>' +
+                            '<td>' + voucher.createdAt + '</td>' +
                             '<td>' + voucher.expiredAt + '</td>' +
                           '</tr>';
                 tableBody.append(row);
@@ -159,7 +160,7 @@
     </div>
     <!-- end common menu -->
     <div id = "header">
-        <h3>Voucher</h3>
+        <h3>My Voucher</h3>
         <input type="text" id="codeFilter" placeholder="Enter code"/>
         <button id="searchBtn">Search</button>
     </div>

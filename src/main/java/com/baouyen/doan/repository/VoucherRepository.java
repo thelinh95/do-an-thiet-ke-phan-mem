@@ -21,7 +21,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, Integer>{
     Page<Voucher> findByCodeContainingIgnoreCase(@Param("code") String code, Pageable pageable);
 
     @Query("SELECT v FROM Voucher v WHERE LOWER(v.code) LIKE LOWER(CONCAT('%', :code, '%')) " +
-            "AND c.status = :status")
+            "AND v.status = :status")
     Page<Voucher> searchVoucher(@Param("code") String code,
                                 @Param("status") VoucherDto.VOUCHER_STATUS status, Pageable pageable);
 
@@ -30,7 +30,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, Integer>{
                                                               @Param("campaigns") List<Campaign> campaigns, Pageable pageable);
 
     @Query("SELECT v FROM Voucher v WHERE LOWER(v.code) LIKE LOWER(CONCAT('%', :code, '%')) AND v.campaign = :campaign " +
-            "AND c.status = :status")
+            "AND v.status = :status")
     Page<Voucher> searchVoucher(@Param("code") String code, @Param("campaign") Campaign campaign,
                                 @Param("status") VoucherDto.VOUCHER_STATUS status,
                                 Pageable pageable);
@@ -39,7 +39,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, Integer>{
     Page<Voucher> findByCampaignIn(@Param("campaigns") List<Campaign> campaigns, Pageable pageable);
 
     @Query("SELECT v FROM Voucher v WHERE v.campaign = :campaign " +
-            "AND c.status = :status")
+            "AND v.status = :status")
     Page<Voucher> searchVoucher(@Param("campaign") Campaign campaign,
                                 @Param("status") VoucherDto.VOUCHER_STATUS status, Pageable pageable);
 
@@ -52,16 +52,16 @@ public interface VoucherRepository extends JpaRepository<Voucher, Integer>{
 
     Page<Voucher> findByUser(User user, Pageable pageable);
 
-    @Query("SELECT COUNT(v) FROM Voucher v WHERE v.winnerUser IS NOT NULL")
+    @Query("SELECT COUNT(*) FROM Voucher v WHERE v.user IS NOT NULL")
     long countWinGames();
 
-    @Query("SELECT COUNT(v) FROM Voucher")
+    @Query("SELECT COUNT(*) FROM Voucher")
     long countTotal();
 
-    @Query("SELECT COUNT(v) FROM Voucher v WHERE v.status = com.baouyen.doan.dto.VoucherDto.VOUCHER_STATUS.USED")
-    long countUsedVouchers();
+    @Query("SELECT COUNT(*) FROM Voucher v WHERE v.status = :status")
+    long countUsedVouchers(@Param("status") VoucherDto.VOUCHER_STATUS status);
 
-    @Query("SELECT COUNT(v) FROM Voucher v WHERE v.expiredAt > :currentEpochValue")
+    @Query("SELECT COUNT(*) FROM Voucher v WHERE v.expiredAt < :currentEpochValue")
 
     long countExpiredVouchers(@Param("currentEpochValue") long currentEpochValue);
 }

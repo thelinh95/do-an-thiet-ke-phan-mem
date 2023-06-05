@@ -27,6 +27,11 @@ public class UserController {
         return "user/home";
     }
 
+    /**
+     * Search user campaign which created voucher.
+     * @param request
+     * @return
+     */
     @PostMapping("/campaigns/search")
     @ResponseBody
     public Page<CampaignResponse> searchCampaign(@RequestBody UserSearchCampaignRequest request) {
@@ -61,7 +66,7 @@ public class UserController {
     @PostMapping("/vouchers/search")
     @ResponseBody
     public Page<VoucherDto> searchVoucher(@RequestBody SearchVoucherRequest request) {
-        return voucherService.searchPartnerVoucher(request);
+        return voucherService.searchUserVoucher(request);
     }
 
 }

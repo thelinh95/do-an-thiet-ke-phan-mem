@@ -107,7 +107,7 @@ public class VoucherServiceImp implements VoucherService {
 
     @Override
     public long getNumberUsedVouchers() {
-        return voucherRepository.countUsedVouchers();
+        return voucherRepository.countUsedVouchers(VoucherDto.VOUCHER_STATUS.USED);
     }
 
     @Override

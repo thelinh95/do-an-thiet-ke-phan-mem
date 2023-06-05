@@ -82,7 +82,7 @@ public class GameServiceImp implements GameService {
         }
 
         Set<Game> games = voucherOtp.get().getCampaign().getGames();
-        int randomGameIndex = new Random().nextInt(games.size() - 1);
+        int randomGameIndex = new Random().nextInt(games.size());
         GameType gameType = games.stream().skip(randomGameIndex).findFirst().get().getGameType();
         return new GamePlayResponse(gameType, GAME_RANDOM_DIGIT);
     }
@@ -131,7 +131,7 @@ public class GameServiceImp implements GameService {
 
         if(request.getPlayData().equals(voucherGameRandomStr)){
             voucher.setStatus(VoucherDto.VOUCHER_STATUS.USED);
-            voucher.setWinnerUser(securityContextService.getCurrentLoginUser());
+            voucher.setUser(securityContextService.getCurrentLoginUser());
             voucherRepository.save(voucher);
             gameResult.setWin(true);
             gameResult.setWinMessage("Bingo! You win. Your voucher code is " + voucher.getCode());
