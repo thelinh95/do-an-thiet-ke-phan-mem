@@ -128,9 +128,9 @@
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/partner/voucher}">Vouchers</a>
                         </li>
-                        <!--                        <li class="nav-item">-->
-                        <!--                            <a class="nav-link" th:href="@{/partner/store}">Store</a>-->
-                        <!--                        </li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/partner/store}">Store</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/partner/profile}">Profile</a>
                         </li>
@@ -141,6 +141,10 @@
                             </form>
                         </li>
                     </ul>
+
+                    <span class="navbar-text">
+                        Logged in as: <span th:text="${#httpServletRequest.remoteUser}"></span>
+                    </span>
                 </div>
             </div>
         </nav>

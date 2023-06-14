@@ -12,6 +12,7 @@ public class CreateCampaignRequest {
     private String startDate;
 
     private List<Long> gameIds;
+    private Long storeId;
 
     public String getName() {
         return name;
@@ -43,5 +44,13 @@ public class CreateCampaignRequest {
 
     public void setGameIds(List<Long> gameIds) {
         this.gameIds = gameIds;
+    }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
     }
 }

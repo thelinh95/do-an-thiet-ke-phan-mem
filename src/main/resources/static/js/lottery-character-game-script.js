@@ -12,6 +12,10 @@ document.addEventListener("DOMContentLoaded", function() {
         input.setAttribute("placeholder", "_");
         input.setAttribute("pattern", "[A-Za-z]+");
 
+        input.addEventListener("input", function() {
+            this.value = this.value.replace(/[^A-Za-z]/g, "");
+        });
+
         letterInputs.appendChild(input);
     }
 

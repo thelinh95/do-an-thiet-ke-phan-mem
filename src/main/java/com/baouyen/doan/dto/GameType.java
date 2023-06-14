@@ -2,7 +2,8 @@ package com.baouyen.doan.dto;
 
 public enum GameType {
     LOTTERY_CHARACTER("Lottery character"),
-    LOTTERY_NUMBER("Lottery number");
+    LOTTERY_NUMBER("Lottery number"),
+    TERIS("Teris");
 
     private String code;
 

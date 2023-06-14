@@ -12,36 +12,83 @@
     <style>
         #letter-inputs input {
             font-size: 32px;
+            width: 60px;
         }
 
         #result-message {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #game-title {
+          position: relative;
+          animation: slide 3s infinite alternate;
+        }
+
+        @keyframes slide {
+          0% {
+            left: 0;
+          }
+          100% {
+            left: 100px;
+          }
         }
     </style>
 </head>
 <body>
-<h1>Game Lottery Character Guessing</h1>
-<div id="game-board">
-    <div id="letter-inputs"></div>
-    <button id="submit-button" class="btn btn-lg btn-primary btn-block">Submit</button>
-</div>
-<div id="result-message" style="display: none;"></div>
+<div class="container">
 
-<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <!-- common menu -->
+    <div id="common-menu">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mx-auto" >
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/user/home}">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/user/campaign}">Campaigns</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <form th:action="@{/logout}" method="post">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-link nav-link">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+
+                    <span class="navbar-text">
+                        Logged in as: <span th:text="${#httpServletRequest.remoteUser}"></span>
+                    </span>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- end common menu -->
+
+    <h1 id="game-title">Game Lottery Character Guessing</h1>
+    <p id="game-description">Guess the correct word to receive the voucher!</p>
+    <div id="game-board">
+        <div id="letter-inputs"></div>
+        <button id="submit-button" class="btn btn-lg btn-primary btn-block">Submit</button>
+    </div>
+    <div id="result-message" style="display: none;"></div>
+
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+</div>
 
 <script th:src="@{/js/lottery-character-game-script.js}" type="text/javascript"></script>
 <script th:inline="javascript">
     var voucherId = /*[[${voucherId}]]*/;
     var gameRandomDigit = /*[[${gameRandomDigit}]]*/;
     var gameType = /*[[${gameType}]]*/;
-    console.log(voucherId);
-    console.log(gameRandomDigit);
 </script>
 
 </body>

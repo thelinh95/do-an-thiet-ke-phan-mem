@@ -14,6 +14,16 @@
 
     /*<![CDATA[*/
     $(document).ready(function() {
+        var stores = [[${stores}]];
+
+        if( stores.length === 0){
+            alert('You must create store first');
+            window.location.href = "/partner/store/create";
+            return;
+        }
+
+        initStoresData(stores);
+
         var today = new Date();
         $('#startDate').datepicker({
             dateFormat: "dd/mm/yy",
@@ -34,6 +44,7 @@
             var startDate = $('#startDate').val();
             var endDate = $('#endDate').val();
             var gameIds = $('#games').val();
+            var storeIds = $('#store').val();
 
             var isValid = true;
             if ($.trim(name) === '') {
@@ -83,6 +94,14 @@
               $('#gamesError').hide();
             }
 
+            if(storeIds.length == 0) {
+              $('#storeIdError').text('Please select store');
+              $('#storeIdError').show();
+              isValid = false;
+            } else {
+              $('#storeIdError').hide();
+            }
+
             if(!isValid) {
                 return;
             }
@@ -91,7 +110,8 @@
                 name: name,
                 startDate: startDate,
                 endDate: endDate,
-                gameIds: gameIds
+                gameIds: gameIds,
+                storeId: storeIds
             };
 
             createCampaign(createCampaignDTO);
@@ -105,6 +125,13 @@
                     select.append($("<option></option>").attr("value", value.id).text(value.name));
                 });
             });
+        }
+
+        function initStoresData(stores){
+            var select = $("#store");
+            $.each(stores, function(index, value) {
+                    select.append($("<option></option>").attr("value", value.id).text(value.name));
+                });
         }
 
         function createCampaign(createCampaignDTO) {
@@ -147,9 +174,9 @@
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/partner/voucher}">Vouchers</a>
                         </li>
-                        <!--                        <li class="nav-item">-->
-                        <!--                            <a class="nav-link" th:href="@{/partner/store}">Store</a>-->
-                        <!--                        </li>-->
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/partner/store}">Store</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/partner/profile}">Profile</a>
                         </li>
@@ -160,6 +187,10 @@
                             </form>
                         </li>
                     </ul>
+
+                    <span class="navbar-text">
+                        Logged in as: <span th:text="${#httpServletRequest.remoteUser}"></span>
+                    </span>
                 </div>
             </div>
         </nav>
@@ -193,6 +224,13 @@
             <select id="games" name="games" class="form-control" multiple="multiple">
             </select>
             <div class="invalid-feedback" id="gamesError"></div>
+        </div>
+
+        <div class="form-group" >
+            <label for="store"></label>
+            <select id="store" name="store" class="form-control" >
+            </select>
+            <div class="invalid-feedback" id="storeError"></div>
         </div>
 
         <button id="createBtn"  class="btn btn-default">Create</button>

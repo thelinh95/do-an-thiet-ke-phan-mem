@@ -7,11 +7,14 @@ import com.baouyen.doan.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminController extends BaseController {
     @Autowired
     private CampaignService campaignService;
 
@@ -22,7 +25,8 @@ public class AdminController {
     private UserService userService;
 
     @GetMapping(value = {"", "/home", "/campaign"})
-    public String home() {
+    public String home(HttpServletRequest request, Model model) {
+        addRemoteUserToModel(model, request);
         return "admin/campaign";
     }
 
@@ -33,7 +37,8 @@ public class AdminController {
     }
 
     @GetMapping("/partner")
-    public String partner() {
+    public String partner(HttpServletRequest request, Model model) {
+        addRemoteUserToModel(model, request);
         return "admin/partner";
     }
 
@@ -44,12 +49,14 @@ public class AdminController {
     }
 
     @GetMapping("/game")
-    public String game() {
+    public String game(HttpServletRequest request, Model model) {
+        addRemoteUserToModel(model, request);
         return "admin/game";
     }
 
     @GetMapping("/user")
-    public String user() {
+    public String user(HttpServletRequest request, Model model) {
+        addRemoteUserToModel(model, request);
         return "admin/user";
     }
 

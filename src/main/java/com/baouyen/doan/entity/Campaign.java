@@ -21,7 +21,7 @@ public class Campaign {
     private LocalDate endDate;
 
     @ManyToOne
-    @JoinColumn(name = "campaign_id")
+    @JoinColumn(name = "partner_id")
     private Partner partner;
 
     @Column
@@ -37,6 +37,10 @@ public class Campaign {
             joinColumns = @JoinColumn(name = "campaign_id"),
             inverseJoinColumns = @JoinColumn(name = "game_id"))
     private Set<Game> games;
+
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     public Long getId() {
         return id;
@@ -100,5 +104,13 @@ public class Campaign {
 
     public void setStatus(CampaignStatus status) {
         this.status = status;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 }

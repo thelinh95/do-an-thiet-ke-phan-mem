@@ -3,15 +3,14 @@ package com.baouyen.doan.service;
 import com.baouyen.doan.converter.CampaignConverter;
 import com.baouyen.doan.converter.VoucherConverter;
 import com.baouyen.doan.dto.*;
-import com.baouyen.doan.entity.Campaign;
-import com.baouyen.doan.entity.CampaignStatus;
-import com.baouyen.doan.entity.Partner;
-import com.baouyen.doan.entity.Voucher;
+import com.baouyen.doan.entity.*;
 import com.baouyen.doan.repository.CampaignRepository;
 import com.baouyen.doan.repository.PartnerRepository;
+import com.baouyen.doan.repository.StoreRepository;
 import com.baouyen.doan.repository.VoucherRepository;
 import com.baouyen.doan.util.DateTimeUtil;
 import com.baouyen.doan.util.RandomUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,6 +39,8 @@ public class CampaignServiceImp implements CampaignService {
 
     @Autowired
     private VoucherConverter voucherConverter;
+    @Autowired
+    private StoreRepository storeRepository;
 
     @Override
     public Page<CampaignResponse> searchCampaign(SearchCampaignRequest request) {
@@ -71,23 +72,35 @@ public class CampaignServiceImp implements CampaignService {
 
         Pageable pageable = new PageRequest(page, size);
 
+        StoreDto.StoreType storeType = null;
+        if(request.getStoreType() != null){
+            if(!request.getStoreType().equals("All")){
+                storeType = StoreDto.StoreType.valueOf(request.getStoreType());
+            }
+        }
+
         Page<Campaign> result;
         if (name != null) {
             if(request.getPartnerName() != null){
                 List<Partner> partners = partnerRepository.findByNameContainingIgnoreCase(request.getPartnerName());
+
                 result = campaignRepository.searchCampaigns(
-                        name, partners, CampaignStatus.CREATED_VOUCHERS, pageable);
+                        name, partners, CampaignStatus.CREATED_VOUCHERS,
+                        storeType, pageable);
             } else {
                 result = campaignRepository.searchCampaigns(name,
-                        CampaignStatus.CREATED_VOUCHERS, pageable);
+                        CampaignStatus.CREATED_VOUCHERS,
+                        storeType, pageable);
             }
 
         } else {
             if(request.getPartnerName() != null){
                 List<Partner> partners = partnerRepository.findByNameContainingIgnoreCase(request.getPartnerName());
-                result = campaignRepository.findByPartnerIn(partners, pageable);
+                result = campaignRepository.findByPartnerIn(partners,
+                        storeType, pageable);
             } else {
-                result = campaignRepository.findByStatus(CampaignStatus.CREATED_VOUCHERS, pageable);
+                result = campaignRepository.findByStatus(CampaignStatus.CREATED_VOUCHERS,
+                        storeType, pageable);
             }
         }
 
@@ -119,12 +132,16 @@ public class CampaignServiceImp implements CampaignService {
 
     @Override
     public void createPartnerCampaign(CreateCampaignRequest request) {
+        Optional<Store> storeOptional = storeRepository.findById(request.getStoreId());
+
         Partner currentPartner = securityContextService.getCurrentPartner();
+
         Campaign campaign = campaignConverter.requestDtoToEntity(request);
         campaign.setPartner(currentPartner);
         Set<Campaign> campaigns = currentPartner.getCampaigns();
         campaigns.add(campaign);
         campaign.setStatus(CampaignStatus.INITIAL);
+        storeOptional.ifPresent(campaign::setStore);
         Campaign crreatedCampaign = campaignRepository.save(campaign);
     }
 

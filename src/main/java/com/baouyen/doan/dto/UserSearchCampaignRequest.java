@@ -5,6 +5,16 @@ public class UserSearchCampaignRequest extends PaginationRequest {
 
     private String partnerName;
 
+    private String storeType;
+
+    public String getStoreType() {
+        return storeType;
+    }
+
+    public void setStoreType(String storeType) {
+        this.storeType = storeType;
+    }
+
     public String getName() {
         return name;
     }

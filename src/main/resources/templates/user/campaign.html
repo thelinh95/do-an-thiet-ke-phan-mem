@@ -14,9 +14,23 @@
     $(document).ready(function() {
         var PAGE_SIZE = 3;
 
+        getMasterData();
+
+        function getMasterData(){
+            $.get("/master-data", function(data) {
+                var storeTypes = data.storeTypes;
+                var select = $("#storeTypeFilter");
+                select.append($("<option></option>").attr("value", null).text("All"));
+                $.each(storeTypes, function(index, value) {
+                    select.append($("<option></option>").attr("value", value.name).text(value.code));
+                });
+            });
+        }
+
         $('#searchBtn').click(function() {
             var nameFilter = processEmptyFilter($('#nameFilter').val());
             var partnerNameFilter = processEmptyFilter($('#partnerNameFilter').val());
+            var storeType = $("#storeTypeFilter").val();
 
             var page = 0;
             var size = PAGE_SIZE;
@@ -29,6 +43,7 @@
             var searchCampaignDTO = {
                 name: nameFilter,
                 partnerName: partnerNameFilter,
+                storeType: storeType,
                 paginator: paginator
             };
 
@@ -169,6 +184,10 @@
                             </form>
                         </li>
                     </ul>
+
+                    <span class="navbar-text">
+                        Logged in as: <span th:text="${#httpServletRequest.remoteUser}"></span>
+                    </span>
                 </div>
             </div>
         </nav>
@@ -182,6 +201,10 @@
 
         <label for="partnerNameFilter" class="mr-2 search_component">Partner:</label>
         <input type="text" id="partnerNameFilter" placeholder="Enter partner name"/>
+
+        <label for="storeTypeFilter" class="mr-2 search_component">Store type:</label>
+        <select id="storeTypeFilter" name="storeTypeFilter">
+        </select>
 
         <button id="searchBtn" class="search_component">Search</button>
     </div>

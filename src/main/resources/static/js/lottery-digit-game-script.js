@@ -10,7 +10,11 @@ document.addEventListener("DOMContentLoaded", function() {
         input.setAttribute("type", "text");
         input.setAttribute("maxlength", "1");
         input.setAttribute("placeholder", "_");
-        input.setAttribute("pattern", "[0-9]*");
+        input.setAttribute("pattern", "[0-9]+");
+
+        input.addEventListener("input", function() {
+            this.value = this.value.replace(/\D/g, "");
+        });
 
         letterInputs.appendChild(input);
     }

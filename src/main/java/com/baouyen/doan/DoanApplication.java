@@ -123,13 +123,14 @@ public class DoanApplication {
 		result.setGames(games);
 	}
 
+	/**
+	 * Create default 3 games.
+	 */
 	private void createGame() {
-
-		for(int i=0; i<5; i++) {
+		for(int i=0; i<3; i++) {
 			Game game = new Game();
-			int gameTypeInt = new Random().nextInt(2);
-			game.setName("game " + generateRandomString(2));
-			game.setGameType(GameType.values()[gameTypeInt]);
+			game.setName("game " + i);
+			game.setGameType(GameType.values()[i]);
 			gameRepository.save(game);
 		}
 	}

@@ -1,9 +1,6 @@
 package com.baouyen.doan.controller;
 
-import com.baouyen.doan.dto.GameDto;
-import com.baouyen.doan.dto.GameType;
-import com.baouyen.doan.dto.MasterData;
-import com.baouyen.doan.dto.VoucherDto;
+import com.baouyen.doan.dto.*;
 import com.baouyen.doan.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,12 +39,17 @@ public class MasterDataController {
         List<MasterDataItem> voucherTypes = voucherTypesEnum.stream().map(vt -> new MasterDataItem(vt.name(), vt.getCode()))
                 .collect(Collectors.toList());
 
+        List<StoreDto.StoreType> storeTypesEnum = Arrays.asList(StoreDto.StoreType.values());
+        List<MasterDataItem> storeTypes = storeTypesEnum.stream().map(gt -> new MasterDataItem(gt.name(), gt.getCode()))
+                .collect(Collectors.toList());
+
         List<GameDto> allGames = gameService.getAllGames();
 
         MasterData result = new MasterData();
         result.setGameTypes(gameTypes);
         result.setVoucherTypes(voucherTypes);
         result.setAllGames(allGames);
+        result.setStoreTypes(storeTypes);
 
         return result;
     }

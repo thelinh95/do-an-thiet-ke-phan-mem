@@ -161,6 +161,9 @@
                             </form>
                         </li>
                     </ul>
+                    <span class="navbar-text">
+                        Logged in as: <span th:text="${#httpServletRequest.remoteUser}"></span>
+                    </span>
                 </div>
             </div>
         </nav>

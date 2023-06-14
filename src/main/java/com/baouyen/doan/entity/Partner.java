@@ -27,6 +27,9 @@ public class Partner {
     @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Campaign> campaigns;
 
+    @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Store> stores;
+
     public Long getId() {
         return id;
     }
@@ -81,5 +84,13 @@ public class Partner {
 
     public void setCampaigns(Set<Campaign> campaigns) {
         this.campaigns = campaigns;
+    }
+
+    public Set<Store> getStores() {
+        return stores;
+    }
+
+    public void setStores(Set<Store> stores) {
+        this.stores = stores;
     }
 }

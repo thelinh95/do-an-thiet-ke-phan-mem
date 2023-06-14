@@ -9,9 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping("/admin/statistic")
-public class StatisticController {
+public class StatisticController extends BaseController {
 
     @Autowired
     private CampaignService campaignService;
@@ -23,13 +25,15 @@ public class StatisticController {
     private GamePlayService gamePlayService;
 
     @GetMapping
-    public String searchStatistic(Model model) {
+    public String searchStatistic(Model model, HttpServletRequest request) {
         long totalVouchers = voucherService.getTotalVoucher();
         long numberUsedVouchers = voucherService.getNumberUsedVouchers();
         long numberExpiredVouchers = voucherService.getNumberExpiredVouchers();
 
         long totalUserPlayGame = gamePlayService.getTotalUserPlayGame();
         long totalUserWinGame = gamePlayService.getTotalUserWinGame();
+
+        addRemoteUserToModel(model, request);
 
         model.addAttribute("totalVouchers", totalVouchers);
         model.addAttribute("numberUsedVouchers", numberUsedVouchers);

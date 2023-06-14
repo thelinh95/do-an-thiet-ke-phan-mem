@@ -35,6 +35,8 @@ public class GameServiceImp implements GameService {
     @Autowired
     private SecurityContextService securityContextService;
 
+    private static final long TERIS_GAME_WIN_SCORE = 800;
+
     @Override
     public Page<GameDto> searchGame(SearchGameRequest request) {
         String name = request.getName();
@@ -128,8 +130,19 @@ public class GameServiceImp implements GameService {
 
         gamePlay.setPlayAt(playAt);
         gamePlayRepository.save(gamePlay);
+        boolean isWin = false;
+        if(GameType.TERIS.name().equals(request.getGameType())){
+            long score = Long.valueOf(request.getPlayData());
+            if (score >= TERIS_GAME_WIN_SCORE) {
+                isWin = true;
+            }
+        } else {
+            if (request.getPlayData().equals(voucherGameRandomStr)) {
+                isWin = true;
+            }
+        }
 
-        if(request.getPlayData().equals(voucherGameRandomStr)){
+        if(isWin) {
             voucher.setStatus(VoucherDto.VOUCHER_STATUS.USED);
             voucher.setUser(securityContextService.getCurrentLoginUser());
             voucherRepository.save(voucher);

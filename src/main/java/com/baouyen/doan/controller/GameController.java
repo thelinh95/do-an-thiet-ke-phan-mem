@@ -8,12 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static com.baouyen.doan.service.CampaignServiceImp.GAME_RANDOM_DIGIT;
 
 @Controller
-public class GameController {
+public class GameController extends BaseController{
     @Autowired
     private GameService gameService;
 
@@ -31,7 +32,8 @@ public class GameController {
     }
 
     @GetMapping("/admin/games/create")
-    public String createGame() {
+    public String createGame(HttpServletRequest request, Model model) {
+        addRemoteUserToModel(model, request);
         return "game/create-game";
     }
 
@@ -40,7 +42,9 @@ public class GameController {
      * @return
      */
     @GetMapping("/voucher/{voucherId}/redeem")
-    public String redeemVoucher(@PathVariable Long voucherId, Model model) {
+    public String redeemVoucher(@PathVariable Long voucherId, Model model,
+            HttpServletRequest request) {
+        addRemoteUserToModel(model, request);
         GameType gameType = gameService.getVoucherGame(voucherId).getGameType();
         String gameView = "";
         switch (gameType) {
@@ -49,6 +53,9 @@ public class GameController {
                 break;
             case LOTTERY_CHARACTER:
                 gameView = "game-lottery-character";
+                break;
+            case TERIS:
+                gameView = "game-teris";
                 break;
         }
 
