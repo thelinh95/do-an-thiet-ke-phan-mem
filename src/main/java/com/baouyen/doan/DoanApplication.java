@@ -152,7 +152,7 @@ public class DoanApplication {
 	private void createGame() {
 		for(int i=0; i<3; i++) {
 			Game game = new Game();
-			game.setName("game " + i);
+			game.setName(GameType.values()[i].name());
 			game.setGameType(GameType.values()[i]);
 			gameRepository.save(game);
 		}

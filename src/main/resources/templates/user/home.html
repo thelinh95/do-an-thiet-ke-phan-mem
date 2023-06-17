@@ -96,6 +96,26 @@
             pagination.append(ul);
         }
 
+        function formatDate(epoch) {
+          // Create a new Date object with the epoch value
+          var date = new Date(epoch);
+
+          // Extract the day, month, and year from the Date object
+          var day = date.getDate();
+          var month = date.getMonth() + 1; // Note: Month is zero-based
+          var year = date.getFullYear();
+
+          // Format the day, month, and year as two-digit strings
+          var formattedDay = String(day).padStart(2, '0');
+          var formattedMonth = String(month).padStart(2, '0');
+
+          // Create the formatted date string in the "dd/mm/yyyy" format
+          var formattedDate = formattedDay + '/' + formattedMonth + '/' + year;
+
+          return formattedDate;
+        }
+
+
         function renderSearchResults(vouchers) {
             var tableBody = $('#searchResult');
             tableBody.empty();
@@ -103,12 +123,19 @@
             for (var i = 0; i < vouchers.length; i++) {
                 var voucher = vouchers[i];
 
+                var storeAddress = voucher.campaign.store.offlineAddress;
+                if(voucher.campaign.store.type == "ONLINE"){
+                    storeAddress = voucher.campaign.store.onlineAddress;
+                }
+
                 var row = '<tr>' +
                             '<td>' + voucher.code + '</td>' +
                             '<td>' + voucher.description + '</td>' +
                             '<td>' + voucher.type + '</td>' +
+                            '<td>' + voucher.campaign.store.type + '</td>' +
+                            '<td>' + storeAddress + '</td>' +
                             '<td>' + voucher.createdAt + '</td>' +
-                            '<td>' + voucher.expiredAt + '</td>' +
+                            '<td>' + formatDate(voucher.expiredAt) + '</td>' +
                           '</tr>';
                 tableBody.append(row);
             }
@@ -178,6 +205,8 @@
                 <th>Code</th>
                 <th>Description</th>
                 <th>Type</th>
+                <th>Store Type</th>
+                <th>Store Address</th>
                 <th>Created At</th>
                 <th>Expired At</th>
             </tr>

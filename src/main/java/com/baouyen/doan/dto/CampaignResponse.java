@@ -20,6 +20,8 @@ public class CampaignResponse {
 
     private Set<GameDto> games;
 
+    private StoreDto store;
+
     public Long getId() {
         return id;
     }
@@ -83,5 +85,13 @@ public class CampaignResponse {
 
     public void setStatus(CampaignStatus status) {
         this.status = status;
+    }
+
+    public StoreDto getStore() {
+        return store;
+    }
+
+    public void setStore(StoreDto store) {
+        this.store = store;
     }
 }

@@ -34,6 +34,9 @@ public class CampaignConverter {
     @Autowired
     private PartnerRepository partnerRepository;
 
+    @Autowired
+    private StoreConverter storeConverter;
+
     public Campaign requestDtoToEntity(CreateCampaignRequest request) {
         Campaign result = new Campaign();
         result.setName(request.getName());
@@ -64,6 +67,7 @@ public class CampaignConverter {
         result.setGames(campaign.getGames().stream()
                 .map(v -> gameConverter.entityToDto(v)).collect(Collectors.toSet()));
         result.setStatus(campaign.getStatus());
+        result.setStore( storeConverter.entityToResponseDto(campaign.getStore()));
         return result;
     }
 }

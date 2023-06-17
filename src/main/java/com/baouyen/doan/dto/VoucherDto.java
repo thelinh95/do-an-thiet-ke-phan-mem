@@ -1,5 +1,7 @@
 package com.baouyen.doan.dto;
 
+import com.baouyen.doan.entity.Campaign;
+
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
@@ -18,6 +20,10 @@ public class VoucherDto {
 
     private VOUCHER_STATUS status;
     private String gameRandomString;
+
+    private Long expiredAt;
+
+    private CampaignResponse campaign;
 
     public void setGameRandomString(String gameRandomString) {
         this.gameRandomString = gameRandomString;
@@ -104,5 +110,21 @@ public class VoucherDto {
 
     public String getGameRandomString() {
         return gameRandomString;
+    }
+
+    public Long getExpiredAt() {
+        return expiredAt;
+    }
+
+    public void setExpiredAt(Long expiredAt) {
+        this.expiredAt = expiredAt;
+    }
+
+    public CampaignResponse getCampaign() {
+        return campaign;
+    }
+
+    public void setCampaign(CampaignResponse campaign) {
+        this.campaign = campaign;
     }
 }

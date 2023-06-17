@@ -21,40 +21,6 @@
             var wardAddress = $('#wardAddress').val().trim();
             var provinceAddress = $('#provinceAddress').val().trim();
 
-            var isValid = true;
-
-            if(streetAddress === ''){
-                $('#streetAddressError').text('Please enter Street Address');
-                  $('#streetAddressError').show();
-                  isValid = false;
-            } else {
-                $('#streetAddressError').hide();
-            }
-
-            if(wardAddress === ''){
-                $('#wardAddressError').text('Please enter Ward Address');
-                  $('#wardAddressError').show();
-                  isValid = false;
-            } else {
-                $('#wardAddressError').hide();
-            }
-            
-            if(districtAddress === ''){
-                $('#districtAddressError').text('Please enter District Address');
-                  $('#districtAddressError').show();
-                  isValid = false;
-            } else {
-                $('#districtAddressError').hide();
-            }
-
-            if(provinceAddress === ''){
-                $('#provinceAddressError').text('Please enter Province Address');
-                  $('#provinceAddressError').show();
-                  isValid = false;
-            } else {
-                $('#provinceAddressError').hide();
-            }
-
             var editCampaignDTO = {
                 id: id,
                 streetAddress: streetAddress,
@@ -63,9 +29,7 @@
                 provinceAddress: provinceAddress
             };
 
-            if(isValid){
-                editCampaign(editCampaignDTO);
-            }
+            editCampaign(editCampaignDTO);
         });
 
         function editCampaign(editCampaignDTO) {
