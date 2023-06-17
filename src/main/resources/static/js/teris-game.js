@@ -1,291 +1,295 @@
-var gameBoard = document.getElementById("game-board");
-var resultMessage = document.getElementById("result-message");
+(function(){
+	"use strict";
+	const canvas=document.getElementById("tetris");
+	const context=canvas.getContext("2d");
+	context.scale(20,20);
+	let makeMatrix=function(w,h){
+		const matrix=[];
+		while(h--){
+			matrix.push(new Array(w).fill(0));
+		}
+		return matrix;
+	};
+	let makePiece=function(type){
+		if(type==="t"){
+			return [
+				[0,0,0],
+				[5,5,5],
+				[0,5,0]
+			];
+		}
+		else if(type==="o"){
+			return [
+				[7,7],
+				[7,7]
+			];
+		}
+		else if(type==="l"){
+			return [
+				[0,4,0],
+				[0,4,0],
+				[0,4,4]
+			];
+		}
+		else if(type==="j"){
+			return [
+				[0,1,0],
+				[0,1,0],
+				[1,1,0]
+			];
+		}
+		else if(type==="i"){
+			return [
+				[0,2,0,0],
+				[0,2,0,0],
+				[0,2,0,0],
+				[0,2,0,0]
+			];
+		}
+		else if(type==="s"){
+			return [
+				[0,3,3],
+				[3,3,0],
+				[0,0,0]
+			];
+		}
+		else if(type==="z"){
+			return [
+				[6,6,0],
+				[0,6,6],
+				[0,0,0]
+			];
+		}
+	};
+	let points=function(){
+		let rowCount=1;
+		outer:for(let y=area.length-1;y>0;--y){
+			for(let x=0;x<area[y].length;++x){
+				if(area[y][x]===0){
+					continue outer;
+				}
+			}
+			const row=area.splice(y,1)[0].fill(0);
+			area.unshift(row);
+			++y;
+			player.score+=rowCount*100;
+			rowCount*=2;
+		}
+	}
+	let collide=function(area,player){
+		const [m,o]=[player.matrix,player.pos];
+		for(let y=0;y<m.length;++y){
+			for(let x=0;x<m[y].length;++x){
+				if(m[y][x]!==0&&(area[y+o.y]&&area[y+o.y][x+o.x])!==0){
+					return true;
+				}
+			}
+		}
+		return false;
+	};
+	let drawMatrix=function(matrix,offset){
+		matrix.forEach((row,y)=>{
+			row.forEach((value,x)=>{
+				if(value!==0){
+					// context.fillStyle=colors[value];
+					// context.fillRect(x+offset.x,y+offset.y,1,1);
+					let imgTag=document.createElement("IMG");
+					imgTag.src=colors[value];
+					context.drawImage(imgTag,x+offset.x,y+offset.y,1,1);
+				}
+			});
+		});
+	};
+	let merge=function(area,player){
+		player.matrix.forEach((row,y)=>{
+			row.forEach((value,x)=>{
+				if(value!==0){
+					area[y+player.pos.y][x+player.pos.x]=value;
+				}
+			});
+		});
+	};
+	let rotate=function(matrix,dir){
+		for(let y=0;y<matrix.length;++y){
+			for(let x=0;x<y;++x){
+				[
+					matrix[x][y],
+					matrix[y][x]
+				]=[
+					matrix[y][x],
+					matrix[x][y],
+				]
+			}
+		}
+		if(dir>0){
+			matrix.forEach(row=>row.reverse());
+		}
+		else{
+			matrix.reverse();
+		}
+	};
+	let playerReset=function(){
+		const pieces="ijlostz";
+		player.matrix=makePiece(pieces[Math.floor(Math.random()*pieces.length)]);
+		player.pos.y=0;
+		player.pos.x=(Math.floor(area[0].length/2))-(Math.floor(player.matrix[0].length/2));
+		if(collide(area,player)){
+			area.forEach(row=>row.fill(0));
+			player.score=0;
+			gameRun=false;
+		}
+	};
+	let playerDrop=function(){
+		player.pos.y++;
+		if(collide(area,player)){
+			player.pos.y--;
+			merge(area,player);
+			points();
+			playerReset();
+			updateScore();
+		}
+	};
+	let playerMove=function(dir){
+		player.pos.x+=dir;
+		if(collide(area,player)){
+			player.pos.x-=dir;
+		}
+	};
+	let playerRotate=function(dir){
+		const pos=player.pos.x;
+		let offset=1;
+		rotate(player.matrix,dir);
+		while(collide(area,player)){
+			player.pos.x+=offset;
+			offset=-(offset+(offset>0?1:-1));
+			if(offset>player.matrix[0].length){
+				rotate(player.matrix,-dir);
+				player.pos.x=pos;
+				return;
+			}
+		}
+	};
+	let draw=function(){
+		context.clearRect(0,0,canvas.width,canvas.height);
+		context.fillStyle="#000000";
+		context.fillRect(0,0,canvas.width,canvas.height);
+		updateScore();
+		drawMatrix(area,{x:0,y:0});
+		drawMatrix(player.matrix,player.pos);
+	};
+	let dropInter=100;
+	let time=0;
+	let update=function(){
+		time++;
+		if(time>=dropInter){
+			playerDrop();
+			time=0;
+		}
+		draw();
+	};
+	let updateScore=function(){
+		document.getElementById("score").textContent =  "Score: " + player.score;
+	};
+	let gameOver=function(){
+		clearInterval(gameLoop);
+		context.font="bold 1px Comic Sans MS";
+		context.fillStyle="#ffffff";
+		context.textAlign="center";
+		context.textBaseline="middle";
+		context.fillText("Game Over",(canvas.width/20)/2,(canvas.width/20)/2);
+		document.getElementById("start_game").disabled=false;
+	};
+	const colors=[
+		null,
+		"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAxElEQVQ4T2NkYGBg6Jz34T+Ifv3kGIOojBWYBgFkNlgADfTUeTEygjQLC3Iz3Li8G5sanGIauq5gPYwlTdvAtpMLwC6AORlkKjEA2bUYBvDxsYDN+PTpDwOIDaLRAYoByF4AuQCXJmRDCLoAm604DUB3AclhQK4Bb19cYRCW0EGNRrLCgBQXvH3/lQE90aEkJGzpAKYJRIMAzACcXiA2ELEaABIkBoACDwbAXoBlDGI0w9TAMxNIgFCGgjkX5kKYC0DZGQAfwJNr7nKi7AAAAABJRU5ErkJggg==",
+		"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAxElEQVQ4T2NkYGBgKD1y/D+Ifn7sCIOklQ2YBgFkNlgADSwpK2VkBGkW4udjuLp9GzY1OMW0Pb3AehhjurrBtpMLwC6AORlkKjEA2bUYBvBzcYPN+PjtKwOIDaLRAYoByF4AuQCXJmRDCLoAm604DUB3AclhQK4Br69fYxDV1EKNRrLCgBQXvPv4iQE90aEkJGzpAKYJRIMAzACcXiA2ELEaABIkBoACDwbAXoBlDGI0w9TAMxNIgFCGgjkX5kKYC0DZGQBReJAxJHOTqwAAAABJRU5ErkJggg==",
+		"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAxElEQVQ4T2NkYGBg6Ly04z+IfnXhJoOYgTqYBgFkNlgADfTG5TMygjQL8/EzXD90CpsanGKadmZgPYzFiyaCbScXgF0AczLIVGIAsmsxDODj4gGb8enbFwYQG0SjAxQDkL0AcgEuTciGEHQBNltxGoDuApLDgFwD3tx+yCCiKo8ajWSFASkuePvpIwN6okNJSNjSAUwTiAYBmAE4vUBsIGI1ACRIDAAFHgyAvQDLGMRohqmBZyaQAKEMBXMuzIUwF4CyMwBvl5MXVeEacQAAAABJRU5ErkJggg==",
+		"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAxElEQVQ4T2NkYGBg+D8l5T+I3vf0G4OTNBeYBgFkNlgADTi3L2NkBGsWFmfYd+k+NjU4xZz0FMF6GPdWRoFtJxeAXQB3sp4iUeYguxbTAH5hiCEf3zIwgNggGg2gGIDsBZC/cGlCNoOwC7DYitMADBcQEQr4vUCkARdefmUwEOdGjUaywoAkL7x9yYCe6FASEtgF6ACqiQFEgwA01eL2AiVhADKVGAAKPBgAewGWMYjRDFMDz0wgAUIZCuZfmAthLgBlZwBvBonjT09XegAAAABJRU5ErkJggg==",
+		"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAxElEQVQ4T2NkYGBg2Fvy6T+IvvnlGIM6jxWYBgFkNlgADWTN8GBkBGnmE+FiOP1gDzY1OMVMFVzAehinZewA204uALsA5mSQqcQAZNdiGMAtwAw24+uHvwwgNohGBygGIHsB5AJcmpANIegCbLbiNADdBSSHAbkGPPh0hUGBTwc1GskKA1Jc8OnNNwb0RIeSkLClA5gmEA0CMANweoHYQMRqAEiQGAAKPBgAewGWMYjRDFMDz0wgAUIZCuZcmAthLgBlZwBQ3ZP3OaGtaAAAAABJRU5ErkJggg==",
+		"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAxElEQVQ4T2NkYGBgeJXf8h9EH/n4ksGGXxxMgwAyGyyABoIWTGZkBGnmExdj2HbrMjY1OMW81HTBehjXJeSCbScXgF0AczLIVGIAsmsxDGAXEQSb8fPNewYQG0SjAxQDkL0AcgEuTciGEHQBNltxGoDuApLDgFwDrnx8w6DDL4IajWSFASku+PTyFQN6okNJSNjSAUwTiAYBmAE4vUBsIGI1ACRIDAAFHgyAvQDLGMRohqmBZyaQAKEMBXMuzIUwF4CyMwBUFZC9raUyoQAAAABJRU5ErkJggg==",
+		"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAw0lEQVQ4T2NkYGBg+Hln0n8QfeLSGwYLPREwDQLIbLAAGrAPamJkBGlm4+RjOHTyHjY1OMXszJXAehgPrqsD204uALsA5mSQqcQAZNdiGsDOAzHj5xcGBhAbRKMBFAOQvQB2AQ5NyGYQdgEWW3EagOECIgIBvxeINODK7bcMOqrCqNFIVhiQ4oVf3z8xoCc6lISELR3ANIFoEIAZgNsLlIQByFRiACjwYADsBVjGIEYzTA08M4EECGUomH9hLoS5AJSdASaukfnTt+kFAAAAAElFTkSuQmCC"
+	];
+	const area=makeMatrix(8,20);
+	const player={
+		pos:{
+			x:0,
+			y:0
+		},
+		matrix:null,
+		score:0
+	};
+	const move=1;
+	let gameLoop;
+	let gameRun=false;
+	playerReset();
+	draw();
+//	gameOver();
+	document.addEventListener('keydown',function(e){
+		if(e.keyCode===37){
+			playerMove(-move);
+		}
+		else if(e.keyCode===39){
+			playerMove(+move);
+		}
+		else if(e.keyCode===40){
+			console.log(player.pos);
+			if(gameRun){
+				playerDrop();
+			}
+		}
+		else if(e.keyCode===38){
+			playerRotate(-move);
+		}
+	});
+	document.getElementById("start_game").onclick=function(){
+	    document.getElementById("score").textContent = "Score: 0";
+		gameRun=true;
+		playerReset();
+		console.log(player.pos);
+		gameLoop=setInterval(function(){
+			if(gameRun){
+				update();
+			}
+			else{
+				gameOver();
+			}
+		},10);
+		this.disabled=true;
+	};
 
-// Mảng chứa các loại khối
-var blockTypes = ["red", "blue"];
+	var submitButton = document.getElementById("submit-button");
 
-// Khối hiện tại đang xuất hiện trong game board
-var currentBlock = null;
+	submitButton.addEventListener("click", function() {
+	        clearInterval(gameLoop);
+	        document.getElementById("start_game").disabled=true;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", '/voucher/' + voucherId + '/redeem', true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            var csrfToken = $("input[name='_csrf']").val();
+            xhr.setRequestHeader("X-CSRF-TOKEN", csrfToken);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    console.log(response);
+                    var resultMessage = document.getElementById("result-message");
+                    if (response.win === true) {
+                        resultMessage.textContent = response.winMessage;
+                    } else {
+                        resultMessage.textContent = response.failedErrorMessage;
+                        document.getElementById("start_game").disabled=false;
+                    }
+                    resultMessage.style.display = "block";
+                }
+            };
 
-// Tọa độ hàng và cột của khối hiện tại
-var currentRow = 0;
-var currentCol = 0;
+            var score = document.getElementById("score").textContent;
+            score = score.replace("Score: ", "");
+            var gamePlayDTO = {
+                              gameType: gameType,
+                              playedAt: new Date().getTime(),
+                              playData: score
+                                 };
+            xhr.send(JSON.stringify(gamePlayDTO));
 
-var NUM_ROWS = 10;
-var NUM_COLS = 10;
-var RANDOM_OCCUR_COLUMN = 10;
-
-// Hàm tạo một khối mới và cho nó xuất hiện trong game board
-function createBlock() {
-  // Chọn một loại khối ngẫu nhiên
-  var randomBlockType = blockTypes[Math.floor(Math.random() * blockTypes.length)];
-
-  // Thiết lập khối hiện tại
-  currentBlock = randomBlockType;
-  currentRow = 0;
-  currentCol = Math.floor(Math.random() * RANDOM_OCCUR_COLUMN); // Vị trí ngẫu nhiên trong khoảng từ 0 đến 6
-
-  // Đặt giá trị màu sắc cho ô trong game matrix
-  setBlockColor(currentRow, currentCol, currentBlock);
-}
-
-
-
-// Tạo ma trận game với NUM_ROWS hàng và NUM_COLS cột
-var gameMatrix = [];
-for (var i = 0; i < NUM_ROWS; i++) {
-  var row = [];
-  for (var j = 0; j < NUM_COLS; j++) {
-    row.push(null);
-  }
-  gameMatrix.push(row);
-}
-
-// Vẽ ma trận game lên giao diện
-function drawGame() {
-  gameBoard.innerHTML = "";
-
-  for (var i = 0; i < NUM_ROWS; i++) {
-    for (var j = 0; j < NUM_COLS; j++) {
-      var block = document.createElement("div");
-      block.classList.add("block");
-
-      if (gameMatrix[i][j] === "red") {
-        block.classList.add("red");
-      } else if (gameMatrix[i][j] === "blue") {
-        block.classList.add("blue");
-      }
-
-      // Kiểm tra vị trí của ô vuông trong ma trận game
-      // và thêm lớp "row-divider" và "column-divider" tương ứng
-      if (i !== NUM_ROWS-1) {
-        block.classList.add("row-divider");
-      }
-      if (j !== NUM_COLS-1) {
-        block.classList.add("column-divider");
-      }
-
-      gameBoard.appendChild(block);
-    }
-  }
-}
-
-
-// Đặt giá trị màu sắc cho ô trong ma trận game
-function setBlockColor(row, col, color) {
-  gameMatrix[row][col] = color;
-}
-
-// Kiểm tra xem một khối có gây va chạm hay không
-function isCollision(row, col, blockType) {
-  // Kiểm tra va chạm với khối đã xếp và viền màn hình
-  if (
-    row < 0 ||
-    row >= NUM_ROWS ||
-    col < 0 ||
-    col >= NUM_COLS ||
-    gameMatrix[row][col] !== null
-  ) {
-    return true;
-  }
-
-  return false;
-}
-
-// Di chuyển khối vuông sang trái
-function moveLeft() {
-  var canMove = true;
-  for (var i = 0; i < NUM_ROWS; i++) {
-    for (var j = 0; j < NUM_COLS; j++) {
-      if (gameMatrix[i][j] === "red") {
-        if (isCollision(i, j - 1, "red")) {
-          canMove = false;
-          break;
-        }
-      } else if (gameMatrix[i][j] === "blue") {
-        if (isCollision(i, j - 1, "blue")) {
-          canMove = false;
-          break;
-        }
-      }
-    }
-    if (!canMove) {
-      break;
-    }
-  }
-
-  if (canMove) {
-    for (var i = 0; i < NUM_ROWS; i++) {
-      for (var j = 0; j < NUM_COLS; j++) {
-        if (gameMatrix[i][j] === "red") {
-          gameMatrix[i][j - 1] = "red";
-          gameMatrix[i][j] = null;
-        } else if (gameMatrix[i][j] === "blue") {
-          gameMatrix[i][j - 1] = "blue";
-          gameMatrix[i][j] = null;
-        }
-      }
-    }
-    drawGame();
-  }
-}
-
-
-// Di chuyển khối vuông sang phải
-function moveRight() {
-  var canMove = true;
-  for (var i = 0; i < NUM_ROWS; i++) {
-    for (var j = NUM_COLS-1; j >= 0; j--) {
-      if (gameMatrix[i][j] === "red") {
-        if (isCollision(i, j + 1, "red")) {
-          canMove = false;
-          break;
-        }
-      } else if (gameMatrix[i][j] === "blue") {
-        if (isCollision(i, j + 1, "blue")) {
-          canMove = false;
-          break;
-        }
-      }
-    }
-    if (!canMove) {
-      break;
-    }
-  }
-
-  if (canMove) {
-    for (var i = 0; i < NUM_ROWS; i++) {
-      for (var j = NUM_COLS-1; j >= 0; j--) {
-        if (gameMatrix[i][j] === "red") {
-          gameMatrix[i][j + 1] = "red";
-          gameMatrix[i][j] = null;
-        } else if (gameMatrix[i][j] === "blue") {
-          gameMatrix[i][j + 1] = "blue";
-          gameMatrix[i][j] = null;
-        }
-      }
-    }
-    drawGame();
-  }
-}
-
-// Di chuyển khối vuông xuống dưới
-function moveDown() {
-  var canMove = true;
-  for (var i = NUM_ROWS-1; i >= 0; i--) {
-    for (var j = 0; j < NUM_COLS; j++) {
-      if (gameMatrix[i][j] === "red") {
-        if (isCollision(i + 1, j, "red")) {
-          canMove = false;
-          break;
-        }
-      } else if (gameMatrix[i][j] === "blue") {
-        if (isCollision(i + 1, j, "blue")) {
-          canMove = false;
-          break;
-        }
-      }
-    }
-    if (!canMove) {
-      break;
-    }
-  }
-
-  if (canMove) {
-    for (var i = NUM_ROWS-1; i >= 0; i--) {
-      for (var j = 0; j < NUM_COLS; j++) {
-        if (gameMatrix[i][j] === "red") {
-          gameMatrix[i + 1][j] = "red";
-          gameMatrix[i][j] = null;
-        } else if (gameMatrix[i][j] === "blue") {
-          gameMatrix[i + 1][j] = "blue";
-          gameMatrix[i][j] = null;
-        }
-      }
-    }
-    drawGame();
-  }
-}
-
-// Hàm kiểm tra xem khối đã đạt đến đáy chưa
-function isBlockAtBottom() {
-  for (var i = NUM_ROWS-1; i >= 0; i--) {
-    for (var j = 0; j < NUM_COLS; j++) {
-      if (
-        gameMatrix[i][j] === "red" ||
-        gameMatrix[i][j] === "blue"
-      ) {
-        if (i === NUM_ROWS-1 || gameMatrix[i + 1][j] !== null) {
-          return true;
-        }
-      }
-    }
-  }
-  return false;
-}
-
-function handleBlockAtBottom() {
-  // Kiểm tra xem có hàng nào đã đầy không
-  for (var i = NUM_ROWS - 1; i >= 0; i--) {
-    var isFullRow = true;
-    for (var j = 0; j < NUM_COLS; j++) {
-      if (gameMatrix[i][j] === null) {
-        isFullRow = false;
-        break;
-      }
-    }
-
-    if (isFullRow) {
-      // Xóa hàng đầy
-      for (var j = 0; j < NUM_COLS; j++) {
-        gameMatrix[i][j] = null;
-      }
-
-      // Dịch chuyển các hàng phía trên xuống
-      for (var k = i - 1; k >= 0; k--) {
-        for (var j = 0; j < NUM_COLS; j++) {
-          gameMatrix[k + 1][j] = gameMatrix[k][j];
-          gameMatrix[k][j] = null;
-        }
-      }
-
-      // Tăng điểm khi xóa hàng
-      var score = parseInt(resultMessage.textContent);
-      score += 100;
-      resultMessage.textContent = score;
-    }
-  }
-
-  drawGame();
-}
-
-
-
-  // Hàm bắt đầu trò chơi
-  function startGame() {
-    createBlock(); // Tạo một khối mới
-    drawGame(); // Vẽ game board
-
-    setInterval(function () {
-      if (!isBlockAtBottom()) {
-        moveDown();
-      } else {
-        handleBlockAtBottom();
-        createBlock(); // Tạo một khối mới khi khối hiện tại đạt đến đáy
-      }
-    }, 1000);
-
-    var gameBoard = document.getElementById("game-board");
-    gameBoard.setAttribute("tabindex", "0");
-    // Lắng nghe sự kiện nhấn phím để di chuyển khối vuông
-    gameBoard.addEventListener("keydown", function (event) {
-      if (event.code === "ArrowLeft") {
-        moveLeft();
-      } else if (event.code === "ArrowRight") {
-        moveRight();
-      }
-    });
-  }
-
-  // Gọi hàm bắt đầu trò chơi khi trang web được tải
-startGame();
+        });
+})();

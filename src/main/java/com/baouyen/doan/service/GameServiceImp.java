@@ -35,7 +35,7 @@ public class GameServiceImp implements GameService {
     @Autowired
     private SecurityContextService securityContextService;
 
-    private static final long TERIS_GAME_WIN_SCORE = 800;
+    private static final long TERIS_GAME_WIN_SCORE = 400;
 
     @Override
     public Page<GameDto> searchGame(SearchGameRequest request) {
