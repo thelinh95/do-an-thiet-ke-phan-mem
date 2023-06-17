@@ -224,52 +224,42 @@ function isBlockAtBottom() {
   return false;
 }
 
-  // Hàm xử lý khi khối chạm đáy
-  function handleBlockAtBottom() {
-    for (var i = 0; i < NUM_ROWS; i++) {
-      for (var j = 0; j < NUM_COLS; j++) {
-        if (gameMatrix[i][j] === "red") {
-          gameMatrix[i][j] = null;
-        } else if (gameMatrix[i][j] === "blue") {
-          gameMatrix[i][j] = null;
-        }
+function handleBlockAtBottom() {
+  // Kiểm tra xem có hàng nào đã đầy không
+  for (var i = NUM_ROWS - 1; i >= 0; i--) {
+    var isFullRow = true;
+    for (var j = 0; j < NUM_COLS; j++) {
+      if (gameMatrix[i][j] === null) {
+        isFullRow = false;
+        break;
       }
     }
 
-    // Tính điểm và hiển thị kết quả
-    var score = parseInt(resultMessage.textContent);
-    score += 10;
-    resultMessage.textContent = score;
-
-    // Kiểm tra xem có hàng nào đã đầy không
-    for (var i = NUM_ROWS-1; i >= 0; i--) {
-      var isFullRow = true;
+    if (isFullRow) {
+      // Xóa hàng đầy
       for (var j = 0; j < NUM_COLS; j++) {
-        if (gameMatrix[i][j] === null) {
-          isFullRow = false;
-          break;
-        }
+        gameMatrix[i][j] = null;
       }
 
-      if (isFullRow) {
-        // Xóa hàng đầy
-        for (var k = i; k > 0; k--) {
-          for (var j = 0; j < NUM_COLS; j++) {
-            gameMatrix[k][j] = gameMatrix[k - 1][j];
-          }
-        }
+      // Dịch chuyển các hàng phía trên xuống
+      for (var k = i - 1; k >= 0; k--) {
         for (var j = 0; j < NUM_COLS; j++) {
-          gameMatrix[0][j] = null;
+          gameMatrix[k + 1][j] = gameMatrix[k][j];
+          gameMatrix[k][j] = null;
         }
-
-        // Tăng điểm khi xóa hàng
-        score += 100;
-        resultMessage.textContent = score;
       }
-    }
 
-    drawGame();
+      // Tăng điểm khi xóa hàng
+      var score = parseInt(resultMessage.textContent);
+      score += 100;
+      resultMessage.textContent = score;
+    }
   }
+
+  drawGame();
+}
+
+
 
   // Hàm bắt đầu trò chơi
   function startGame() {
