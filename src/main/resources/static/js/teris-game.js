@@ -11,6 +11,10 @@ var currentBlock = null;
 var currentRow = 0;
 var currentCol = 0;
 
+var NUM_ROWS = 10;
+var NUM_COLS = 10;
+var RANDOM_OCCUR_COLUMN = 10;
+
 // Hàm tạo một khối mới và cho nó xuất hiện trong game board
 function createBlock() {
   // Chọn một loại khối ngẫu nhiên
@@ -19,17 +23,19 @@ function createBlock() {
   // Thiết lập khối hiện tại
   currentBlock = randomBlockType;
   currentRow = 0;
-  currentCol = Math.floor(Math.random() * 7); // Vị trí ngẫu nhiên trong khoảng từ 0 đến 6
+  currentCol = Math.floor(Math.random() * RANDOM_OCCUR_COLUMN); // Vị trí ngẫu nhiên trong khoảng từ 0 đến 6
 
   // Đặt giá trị màu sắc cho ô trong game matrix
   setBlockColor(currentRow, currentCol, currentBlock);
 }
 
-// Tạo ma trận game với 20 hàng và 10 cột
+
+
+// Tạo ma trận game với NUM_ROWS hàng và NUM_COLS cột
 var gameMatrix = [];
-for (var i = 0; i < 20; i++) {
+for (var i = 0; i < NUM_ROWS; i++) {
   var row = [];
-  for (var j = 0; j < 10; j++) {
+  for (var j = 0; j < NUM_COLS; j++) {
     row.push(null);
   }
   gameMatrix.push(row);
@@ -39,8 +45,8 @@ for (var i = 0; i < 20; i++) {
 function drawGame() {
   gameBoard.innerHTML = "";
 
-  for (var i = 0; i < 20; i++) {
-    for (var j = 0; j < 10; j++) {
+  for (var i = 0; i < NUM_ROWS; i++) {
+    for (var j = 0; j < NUM_COLS; j++) {
       var block = document.createElement("div");
       block.classList.add("block");
 
@@ -52,10 +58,10 @@ function drawGame() {
 
       // Kiểm tra vị trí của ô vuông trong ma trận game
       // và thêm lớp "row-divider" và "column-divider" tương ứng
-      if (i !== 19) {
+      if (i !== NUM_ROWS-1) {
         block.classList.add("row-divider");
       }
-      if (j !== 9) {
+      if (j !== NUM_COLS-1) {
         block.classList.add("column-divider");
       }
 
@@ -75,9 +81,9 @@ function isCollision(row, col, blockType) {
   // Kiểm tra va chạm với khối đã xếp và viền màn hình
   if (
     row < 0 ||
-    row >= 20 ||
+    row >= NUM_ROWS ||
     col < 0 ||
-    col >= 10 ||
+    col >= NUM_COLS ||
     gameMatrix[row][col] !== null
   ) {
     return true;
@@ -89,8 +95,8 @@ function isCollision(row, col, blockType) {
 // Di chuyển khối vuông sang trái
 function moveLeft() {
   var canMove = true;
-  for (var i = 0; i < 20; i++) {
-    for (var j = 0; j < 10; j++) {
+  for (var i = 0; i < NUM_ROWS; i++) {
+    for (var j = 0; j < NUM_COLS; j++) {
       if (gameMatrix[i][j] === "red") {
         if (isCollision(i, j - 1, "red")) {
           canMove = false;
@@ -109,8 +115,8 @@ function moveLeft() {
   }
 
   if (canMove) {
-    for (var i = 0; i < 20; i++) {
-      for (var j = 0; j < 10; j++) {
+    for (var i = 0; i < NUM_ROWS; i++) {
+      for (var j = 0; j < NUM_COLS; j++) {
         if (gameMatrix[i][j] === "red") {
           gameMatrix[i][j - 1] = "red";
           gameMatrix[i][j] = null;
@@ -128,8 +134,8 @@ function moveLeft() {
 // Di chuyển khối vuông sang phải
 function moveRight() {
   var canMove = true;
-  for (var i = 0; i < 20; i++) {
-    for (var j = 9; j >= 0; j--) {
+  for (var i = 0; i < NUM_ROWS; i++) {
+    for (var j = NUM_COLS-1; j >= 0; j--) {
       if (gameMatrix[i][j] === "red") {
         if (isCollision(i, j + 1, "red")) {
           canMove = false;
@@ -148,8 +154,8 @@ function moveRight() {
   }
 
   if (canMove) {
-    for (var i = 0; i < 20; i++) {
-      for (var j = 9; j >= 0; j--) {
+    for (var i = 0; i < NUM_ROWS; i++) {
+      for (var j = NUM_COLS-1; j >= 0; j--) {
         if (gameMatrix[i][j] === "red") {
           gameMatrix[i][j + 1] = "red";
           gameMatrix[i][j] = null;
@@ -166,8 +172,8 @@ function moveRight() {
 // Di chuyển khối vuông xuống dưới
 function moveDown() {
   var canMove = true;
-  for (var i = 19; i >= 0; i--) {
-    for (var j = 0; j < 10; j++) {
+  for (var i = NUM_ROWS-1; i >= 0; i--) {
+    for (var j = 0; j < NUM_COLS; j++) {
       if (gameMatrix[i][j] === "red") {
         if (isCollision(i + 1, j, "red")) {
           canMove = false;
@@ -186,8 +192,8 @@ function moveDown() {
   }
 
   if (canMove) {
-    for (var i = 19; i >= 0; i--) {
-      for (var j = 0; j < 10; j++) {
+    for (var i = NUM_ROWS-1; i >= 0; i--) {
+      for (var j = 0; j < NUM_COLS; j++) {
         if (gameMatrix[i][j] === "red") {
           gameMatrix[i + 1][j] = "red";
           gameMatrix[i][j] = null;
@@ -203,13 +209,13 @@ function moveDown() {
 
 // Hàm kiểm tra xem khối đã đạt đến đáy chưa
 function isBlockAtBottom() {
-  for (var i = 19; i >= 0; i--) {
-    for (var j = 0; j < 10; j++) {
+  for (var i = NUM_ROWS-1; i >= 0; i--) {
+    for (var j = 0; j < NUM_COLS; j++) {
       if (
         gameMatrix[i][j] === "red" ||
         gameMatrix[i][j] === "blue"
       ) {
-        if (i === 19 || gameMatrix[i + 1][j] !== null) {
+        if (i === NUM_ROWS-1 || gameMatrix[i + 1][j] !== null) {
           return true;
         }
       }
@@ -220,8 +226,8 @@ function isBlockAtBottom() {
 
   // Hàm xử lý khi khối chạm đáy
   function handleBlockAtBottom() {
-    for (var i = 0; i < 20; i++) {
-      for (var j = 0; j < 10; j++) {
+    for (var i = 0; i < NUM_ROWS; i++) {
+      for (var j = 0; j < NUM_COLS; j++) {
         if (gameMatrix[i][j] === "red") {
           gameMatrix[i][j] = null;
         } else if (gameMatrix[i][j] === "blue") {
@@ -236,9 +242,9 @@ function isBlockAtBottom() {
     resultMessage.textContent = score;
 
     // Kiểm tra xem có hàng nào đã đầy không
-    for (var i = 19; i >= 0; i--) {
+    for (var i = NUM_ROWS-1; i >= 0; i--) {
       var isFullRow = true;
-      for (var j = 0; j < 10; j++) {
+      for (var j = 0; j < NUM_COLS; j++) {
         if (gameMatrix[i][j] === null) {
           isFullRow = false;
           break;
@@ -248,11 +254,11 @@ function isBlockAtBottom() {
       if (isFullRow) {
         // Xóa hàng đầy
         for (var k = i; k > 0; k--) {
-          for (var j = 0; j < 10; j++) {
+          for (var j = 0; j < NUM_COLS; j++) {
             gameMatrix[k][j] = gameMatrix[k - 1][j];
           }
         }
-        for (var j = 0; j < 10; j++) {
+        for (var j = 0; j < NUM_COLS; j++) {
           gameMatrix[0][j] = null;
         }
 
@@ -279,8 +285,10 @@ function isBlockAtBottom() {
       }
     }, 1000);
 
+    var gameBoard = document.getElementById("game-board");
+    gameBoard.setAttribute("tabindex", "0");
     // Lắng nghe sự kiện nhấn phím để di chuyển khối vuông
-    document.addEventListener("keydown", function (event) {
+    gameBoard.addEventListener("keydown", function (event) {
       if (event.code === "ArrowLeft") {
         moveLeft();
       } else if (event.code === "ArrowRight") {

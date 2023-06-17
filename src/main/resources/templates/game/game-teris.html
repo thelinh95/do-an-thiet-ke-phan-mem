@@ -8,10 +8,23 @@
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"/>
 
     <style>
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Đảm bảo chiều cao của container đầy hết viewport */
+        }
+
+        #game-description {
+            /* Cấu hình cho game description */
+            margin-bottom: 20px; /* Khoảng cách giữa game description và game board */
+        }
+
         #game-board {
           display: grid;
           grid-template-columns: repeat(10, 30px);
-          grid-template-rows: repeat(20, 30px);
+          grid-template-rows: repeat(10, 30px);
           grid-gap: 1px;
           background-color: #000;
         }
@@ -89,11 +102,13 @@
         </nav>
     </div>
     <!-- end common menu -->
-
     <h1 id="game-title">Game Teris</h1>
     <p id="game-description">Try to score over 800 to gain the voucher!</p>
-    <div id="game-board"></div>
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <div id="game-board-container">
+        <div id="game-board"></div>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div id="result-message" style="display: none;"></div>
+    </div>
 </div>
 
 <script th:src="@{/js/teris-game.js}" type="text/javascript"></script>

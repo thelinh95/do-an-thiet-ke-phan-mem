@@ -1,12 +1,15 @@
 package com.baouyen.doan;
 
 import com.baouyen.doan.dto.GameType;
+import com.baouyen.doan.dto.StoreDto;
 import com.baouyen.doan.dto.VoucherDto;
 import com.baouyen.doan.entity.*;
 import com.baouyen.doan.repository.CampaignRepository;
 import com.baouyen.doan.repository.GameRepository;
 import com.baouyen.doan.repository.PartnerRepository;
+import com.baouyen.doan.repository.StoreRepository;
 import com.baouyen.doan.util.RandomUtil;
+import jdk.internal.org.objectweb.asm.tree.ParameterNode;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -34,6 +37,9 @@ public class DoanApplication {
 	@Autowired
 	PartnerRepository partnerRepository;
 
+	@Autowired
+	StoreRepository	storeRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(DoanApplication.class, args);
 
@@ -51,6 +57,23 @@ public class DoanApplication {
 		 */
 
 		createGame();
+		/*
+		createStore();
+		createCampaignNoVoucher();
+		 */
+	}
+
+	private void createStore() {
+		Store store = new Store();
+		store.setType(StoreDto.StoreType.OFFLINE);
+		store.setName("store name");
+
+		Partner partner = partnerRepository.findByName("partner1").get(0);
+		store.setPartner(partner);
+		store.setLatitude(1.0);
+		store.setLongitude(2.0);
+		store.setOfflineAddress("offline address");
+		storeRepository.save(store);
 	}
 
 	private void createCampaignNoVoucher() {
@@ -67,8 +90,8 @@ public class DoanApplication {
 		Partner createdPartner = createPartner();
 		result.setPartner(createdPartner);
 
-		createGame(result);
-
+		Game game = gameRepository.findByIdIn(Arrays.asList(2L)).get(0);
+		result.setGames(new HashSet<>(Collections.singletonList(game)));
 		result.setStatus(CampaignStatus.INITIAL);
 
 		Campaign save = campaignRepository.save(result);
